@@ -1,4 +1,6 @@
-FROM python:3.9.2
+FROM python:3.9.2-slim
+
+RUN apt update && apt install -y build-essential
 
 WORKDIR /tmp/project
 
