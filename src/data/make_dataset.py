@@ -49,7 +49,7 @@ def process_raw_data(raw_data_filepath: str, processed_data_filepath: str) -> No
     raw_data["NextClose"] = target
     raw_data.dropna(inplace=True, axis=0)
     raw_data.set_index("TimeStamp", inplace=True)
-    raw_data.to_csv(processed_data_filepath)
+    raw_data.to_csv(processed_data_filepath, index=None)
     return None
 
 

@@ -27,7 +27,23 @@ requirements: test_environment
 
 ## Make Dataset
 data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+	$(PYTHON_INTERPRETER) src/data/make_dataset.py 
+
+train:
+	$(PYTHON_INTERPRETER) src/models/train_model.py
+
+train_all_models:
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class LinearRegressor
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class GradientBoostingRegressor
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class RandomForestRegressor
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class DecisionTreeRegressor
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class KNeighborsRegressor
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class MLPRegressor
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class Ridge
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class ElasticNet
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class BayesianRidge
+	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class HuberRegressor
+
 
 ## Delete all compiled Python files
 clean:
