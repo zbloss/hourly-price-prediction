@@ -1,0 +1,10 @@
+data:
+  csv_file: ../../../data/processed/processed_data.csv
+  directory_to_save_models_in: ../../../models
+  directory_to_save_training_results_in: ../../../data/model_results
+
+model: 
+  target_variable: nextclose
+  validation_percentage: 0.2
+  test_period_in_days: 14
+  save_artifacts: False

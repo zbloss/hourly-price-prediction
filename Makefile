@@ -44,6 +44,20 @@ train_all_models:
 	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class BayesianRidge
 	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class HuberRegressor
 
+# evaluate_all_models:
+# 	for filename in data/model_results/*; do \
+# 		[ -e "$filename" ] \
+# 	done
+
+evaluate_all_models: data/model_results/*
+		for file in $^ ; do \
+        	$(PYTHON_INTERPRETER) src/models/analyze_performance.py --path_to_model_metrics $${file}/model_metrics.csv --path_to_trading_history $${file}/trading_history.csv; \
+		done
+
+list: data/model_results/*
+		for file in $^ ; do \
+        	echo "Hello" $${file} ; \
+		done
 
 ## Delete all compiled Python files
 clean:
