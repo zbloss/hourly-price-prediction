@@ -105,25 +105,40 @@ class AssetTrader(object):
         model_prediction = self.model(batch)
         return model_prediction
 
-    def place_order(self, account_id: str, amount: float, order_type: str = "buy"):
+    def place_buy_order(self, amount: float):
         """
-        Given an account and amount, checks to see if we have
-        the required funds and places the order if possible.
-
+        Checks to see if the amount to buy is greater than USD funds
+        available, if so amount is set to the USD funds. Places a buy
+        order.
         """
-        order_type = order_type.lower()
-        assert order_type in [
-            "buy",
-            "sell",
-        ], f"Invalid order_type passed, not in [buy, sell]: {order_type}"
-
+        
         usd_balance = self.get_account_balance(self.usd_wallet)
-        asset_balance = self.get_account_balance(self.asset_wallet)
 
         if amount > usd_balance:
             amount = usd_balance
 
-        response = self.private_client.place_market_order(
-            product_id=self.asset, side=order_type, funds=str(amount)
+        buy_order_response = self.private_client.place_market_order(
+            product_id=self.asset,
+            side="buy",
+            funds=str(amount)
         )
-        return response
+        return buy_order_response
+
+    def place_sell_order(self, amount: float):
+        """
+        Checks to see if the amount to sell is greater than asset funds
+        available, if so amount is set to the asset funds. Places a sell
+        order.
+        """
+        
+        asset_balance = self.get_account_balance(self.asset_wallet)
+
+        if amount > asset_balance:
+            amount = asset_balance
+
+        sell_order_response = self.private_client.place_market_order(
+            product_id=self.asset,
+            side="sell",
+            funds=str(amount)
+        )
+        return sell_order_response
