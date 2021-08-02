@@ -1,0 +1,5 @@
+defaults:
+  - base_config
+
+data:
+  model_name: run_all

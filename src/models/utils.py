@@ -1,10 +1,11 @@
 import logging
+from math import sqrt
+
 import numpy as np
 import pandas as pd
-from math import sqrt
 from sklearn.base import BaseEstimator
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
 
 
 def get_model_class(model_class: str) -> BaseEstimator:

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import argparse
 import logging
-from pathlib import Path
-import pandas as pd
 import os
+from pathlib import Path
+
+import pandas as pd
 import requests
 
 

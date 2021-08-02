@@ -24,6 +24,7 @@ var/
 *.egg
 coinbase-secrets.json
 outputs/
+multirun/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

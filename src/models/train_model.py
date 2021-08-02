@@ -1,23 +1,17 @@
-import hydra
-from omegaconf import DictConfig, OmegaConf
+import logging
 import os
 import time
+
+import hydra
 import joblib
-import logging
 import pandas as pd
-from utils import (
-    get_model_class,
-    train_test_val_split,
-    training_pipeline,
-    strategy_simulation
-)
+from omegaconf import DictConfig
+from utils import (get_model_class, strategy_simulation, train_test_val_split,
+                   training_pipeline)
 
 
-
-@hydra.main(config_path="../../configs", config_name="linear_config")
+@hydra.main(config_path="../../configs/models", config_name="linear_config")
 def train_model(cfg: DictConfig) -> None:
-    
-    print(OmegaConf.to_yaml(cfg))
 
     model_object = get_model_class(cfg.model.model_class)
 
@@ -83,7 +77,6 @@ def train_model(cfg: DictConfig) -> None:
     logging.info('Model Metrics Saved')
 
     if cfg.model.save_artifacts:
-
 
         model_artifact = os.path.join(
             cfg.data.directory_to_save_models_in, 

@@ -33,21 +33,7 @@ train:
 	$(PYTHON_INTERPRETER) src/models/train_model.py
 
 train_all_models:
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class LinearRegressor
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class GradientBoostingRegressor
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class RandomForestRegressor
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class DecisionTreeRegressor
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class KNeighborsRegressor
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class MLPRegressor
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class Ridge
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class ElasticNet
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class BayesianRidge
-	$(PYTHON_INTERPRETER) src/models/train_model.py --do_not_save_artifacts --model_class HuberRegressor
-
-# evaluate_all_models:
-# 	for filename in data/model_results/*; do \
-# 		[ -e "$filename" ] \
-# 	done
+	$(PYTHON_INTERPRETER) src/models/train_model.py -m model.model_class=linearregressor,gradientboostingregressor,decisiontreeregressor,kneighborsregressor,mlpregressor,ridge,elasticnet,bayesianridge,huberregressor '++data.csv_file=../../../../data/processed/processed_data.csv' '++data.directory_to_save_training_results_in=../../../../data/model_results' '++data.directory_to_save_models_in=../../../../models'
 
 evaluate_all_models: data/model_results/*
 		for file in $^ ; do \

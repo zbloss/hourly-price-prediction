@@ -1,5 +1,9 @@
+from typing import List
 import numpy as np
 import pandas as pd
+from plotly.io import to_html
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 class PerformanceAnalyzer(object):
 
@@ -111,6 +115,108 @@ class PerformanceAnalyzer(object):
         log_differential = np.log(series / series.shift(-1))
         hourly_std = np.std(log_differential)
         annualized_std = hourly_std * np.sqrt(365)
-        return annualized_std    
+        return annualized_std
 
+    def generate_line_plot(
+        self,
+        y_array: np.array, 
+        x_axis_title: str, 
+        y_axis_title: str, 
+        graph_title: str,
+        y_axis_unit: str = None,
+        x_array: np.array = None
+    ) -> go.Figure:
+        """A plotly line plot from the provided array."""
+
+        if x_array is None:
+            x_array = np.arange(len(y_array))
+
+        layout=go.Layout(
+            title=go.layout.Title(text=str(graph_title).title()), 
+            xaxis=go.layout.XAxis(title=x_axis_title),
+            yaxis=go.layout.YAxis(title=y_axis_title)
+        )
+
+        fig = go.Figure(layout=layout)
+        fig.add_trace(
+            go.Scatter(
+                x=x_array, 
+                y=y_array,
+                mode='lines',
+                name=str(graph_title).title()
+            ), 
+        )
+
+        if y_axis_unit is not None:
+            fig.update_layout(yaxis_tickformat = y_axis_unit)
         
+        return fig
+
+    def generate_kpi_plot(
+        self,
+        current_values: List[float],
+        initial_values: List[float],
+        texts: List[str] = [''],
+        subtitles: List[str] = [''],
+        units: List[str] = ['']
+    ) -> go.Figure:
+        """Generates a plotly KPI Plot."""
+        
+        number_of_kpis = len(current_values)
+        fig = go.Figure()
+        
+        assert len(current_values) == len(initial_values), f'''
+current_values and initial_values are not the same length\ncurrent_values: {len(current_values)} | initial_values: {len(initial_values)}'''
+
+
+        for idx, _ in enumerate(current_values):
+            current_value = current_values[idx]
+            initial_value = initial_values[idx]
+            try:
+                text = texts[idx]
+            except IndexError:
+                pass
+            try:
+                subtitle = subtitles[idx]
+            except IndexError:
+                pass
+            try:
+                unit = units[idx]
+            except IndexError:
+                pass
+
+            kpi_text = f'''{str(text).title()}<br><span style="font-size:0.8em;color:gray">{subtitle}</span>'''
+            column = idx + 1
+            row = 1
+
+            indicator_params = {
+                "mode": "number+delta",
+                "value": current_value,
+                "title": {"text": kpi_text},
+                "delta": {'reference': initial_value, 'relative': True},
+                "domain": {'row': row, 'column': column}
+            }
+            if unit == '$':
+                indicator_params["number"] = {'prefix': "$"}
+            indicator = go.Indicator(**indicator_params)
+            fig.add_trace(indicator)
+
+        fig.update_layout(
+            grid = {'rows': 1, 'columns': number_of_kpis+1}
+        )
+
+        return fig
+    
+    @staticmethod
+    def generate_card(html_element: str, card_title: str, p_text: str = ''):
+        card = f'''
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{card_title}</h5>
+                <p class="card-text">{p_text}</p>
+            </div>
+            {html_element}
+        </div>
+        '''
+        return card
+    

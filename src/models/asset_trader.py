@@ -1,10 +1,11 @@
 import time
+from datetime import datetime, timedelta
+
 import cbpro
 import joblib
 import pandas as pd
-from datetime import datetime, timedelta
 from joblib import load
-from urllib3.exceptions import ProtocolError, ConnectionError
+from urllib3.exceptions import ConnectionError, ProtocolError
 
 
 class AssetTrader(object):

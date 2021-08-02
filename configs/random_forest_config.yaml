@@ -1,6 +1,0 @@
-defaults:
-  - base_config
-
-model:
-  model_class: randomforestregressor
-  
