@@ -5,7 +5,9 @@ jobs:
     name: build the lambda function zip file
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          ref: main
       - name: Build AWS Lambda Zip File
         if: github.ref == 'refs/head/main'
         run: make build_zip
