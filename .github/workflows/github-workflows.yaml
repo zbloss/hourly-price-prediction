@@ -13,6 +13,7 @@ jobs:
         run: make build_zip
 
   deploy:
+    needs: build_zip_file
     name: deploy lambda function
     runs-on: ubuntu-latest
     steps:
