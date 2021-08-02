@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: main
+          ref: origin/main
       - name: Build AWS Lambda Zip File
         if: github.ref == 'refs/head/main'
         run: make build_zip
