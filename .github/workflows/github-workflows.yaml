@@ -1,21 +1,32 @@
 name: deploy to lambda
-on: [push]
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build_zip_file:
     name: build the lambda function zip file
     runs-on: ubuntu-latest
-    branches:
-      - main
     steps:
       - uses: actions/checkout@v2
       - name: Build AWS Lambda Zip File
         run: make build_zip
+      - name: Uploading Zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: lambda_zip
+          path: lambda-package.zip
 
   deploy:
     needs: build_zip_file
     name: deploy lambda function
     runs-on: ubuntu-latest
     steps:
+    - name: Downloading Zip
+      uses: actions/download-artifact@v2
+      with:
+        name: lambda_zip
     - name: AWS Lambda Deploy
       uses: appleboy/lambda-action@master
       with:
