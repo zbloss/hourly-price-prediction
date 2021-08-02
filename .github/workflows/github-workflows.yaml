@@ -7,7 +7,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build AWS Lambda Zip File
-        if: github.ref == 'refs/head/main'
         run: make build_zip
 
   deploy:
@@ -15,9 +14,7 @@ jobs:
     name: deploy lambda function
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
     - name: AWS Lambda Deploy
-      if: github.ref == 'refs/heads/master'
       uses: appleboy/lambda-action@master
       with:
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
