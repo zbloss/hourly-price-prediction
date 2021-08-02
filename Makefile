@@ -40,10 +40,15 @@ evaluate_all_models: data/model_results/*
         	$(PYTHON_INTERPRETER) src/models/analyze_performance.py --path_to_model_metrics $${file}/model_metrics.csv --path_to_trading_history $${file}/trading_history.csv; \
 		done
 
-list: data/model_results/*
-		for file in $^ ; do \
-        	echo "Hello" $${file} ; \
-		done
+build_zip:
+	pip3 install -r lambda_requirements.txt --target ./package
+	cd package
+	zip -r ../lambda-package.zip .
+	cd ..
+	zip -g lambda-package.zip src/lambda_function.py
+	zip -g lambda-package.zip src/models/asset_trader.py
+	rm -rf ./package
+	
 
 ## Delete all compiled Python files
 clean:
