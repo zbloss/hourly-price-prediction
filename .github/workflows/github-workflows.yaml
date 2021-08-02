@@ -4,6 +4,8 @@ jobs:
   build_zip_file:
     name: build the lambda function zip file
     runs-on: ubuntu-latest
+    branches:
+      - main
     steps:
       - uses: actions/checkout@v2
       - name: Build AWS Lambda Zip File
