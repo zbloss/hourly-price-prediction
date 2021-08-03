@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-import argparse
 import logging
 import os
-from pathlib import Path
+import hydra
+from omegaconf import DictConfig
 
 import pandas as pd
 import requests
@@ -54,53 +53,25 @@ def process_raw_data(raw_data_filepath: str, processed_data_filepath: str) -> No
     return None
 
 
-if __name__ == "__main__":
-    log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
-    project_dir = Path(__file__).resolve().parents[2]
+@hydra.main(config_path="../../configs/data", config_name="data")
+def main(cfg: DictConfig):
 
-    parser = argparse.ArgumentParser(
-        description="CLI for downloading and preprocessing CSV files from the internet."
-    )
-    parser.add_argument(
-        "--web_url",
-        type=str,
-        default="https://www.cryptodatadownload.com/cdd/Bitfinex_ETHUSD_1h.csv",
-        required=False,
-        help="The Web URL you want to download the new CSV from.",
-    )
-    parser.add_argument(
-        "--raw_file_directory",
-        type=str,
-        default=os.path.join(project_dir, "data", "raw"),
-        required=False,
-        help="Path to where you want to store the raw csv data file.",
-    )
-    parser.add_argument(
-        "--processed_file_directory",
-        type=str,
-        default=os.path.join(project_dir, "data", "processed"),
-        required=False,
-        help="Path to where you want to store the processed csv data file.",
-    )
-    command_line_arguments, unknown_arguments = parser.parse_known_args()
-
-    csv_data = download_csv_file(url_path_to_csv_file=command_line_arguments.web_url)
+    csv_data = download_csv_file(url_path_to_csv_file=cfg.web_url)
     logging.info(f"csv_data type: {type(csv_data)}")
 
     required_directories = [
-        command_line_arguments.raw_file_directory,
-        command_line_arguments.processed_file_directory,
+        cfg.raw_file_directory,
+        cfg.processed_file_directory,
     ]
     for directory in required_directories:
         if not os.path.isdir(directory):
             os.makedirs(directory)
 
     raw_data_filepath = os.path.join(
-        command_line_arguments.raw_file_directory, "raw_data.csv"
+        cfg.raw_file_directory, "raw_data.csv"
     )
     processed_data_filepath = os.path.join(
-        command_line_arguments.processed_file_directory, "processed_data.csv"
+        cfg.processed_file_directory, "processed_data.csv"
     )
     with open(raw_data_filepath, "wb") as csv_file:
         csv_file.write(csv_data)
@@ -110,6 +81,13 @@ if __name__ == "__main__":
         raw_data_filepath=raw_data_filepath,
         processed_data_filepath=processed_data_filepath,
     )
-    logging.info("Done!")
     logging.info(f"Raw Data File: {raw_data_filepath}")
     logging.info(f"Processed Data File: {processed_data_filepath}")
+
+
+if __name__ == "__main__":
+    log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    logging.basicConfig(level=logging.INFO, format=log_fmt)
+
+    main()
+    logging.info("Done!")

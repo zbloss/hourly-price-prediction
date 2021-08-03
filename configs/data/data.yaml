@@ -1,0 +1,3 @@
+web_url: https://www.cryptodatadownload.com/cdd/Bitfinex_ETHUSD_1h.csv
+raw_file_directory: ../../../data/raw
+processed_file_directory: ../../../data/processed
