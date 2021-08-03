@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+import json
 
 import hydra
 import joblib
@@ -48,10 +49,12 @@ def train_model(cfg: DictConfig) -> None:
 
     base_model_name = '{}-{}'.format(cfg.model.model_class, time.strftime('%Y%m%dT%H%M%S'))
 
+    model_directory = os.path.join(cfg.data.directory_to_save_models_in, base_model_name)
     model_directories = [
         cfg.data.directory_to_save_models_in, 
         cfg.data.directory_to_save_training_results_in,
-        os.path.join(cfg.data.directory_to_save_training_results_in, base_model_name)
+        os.path.join(cfg.data.directory_to_save_training_results_in, base_model_name),
+        model_directory
     ]
     for directory in model_directories:
         if not os.path.exists(directory):
@@ -66,7 +69,8 @@ def train_model(cfg: DictConfig) -> None:
     )
     logging.info('Trading History Saved')
 
-    pd.DataFrame([train_metrics, validation_metrics, test_metrics]).to_csv(
+    metrics_dataframe = pd.DataFrame([train_metrics, validation_metrics, test_metrics])
+    metrics_dataframe.to_csv(
         os.path.join(
             cfg.data.directory_to_save_training_results_in, 
             base_model_name, 
@@ -79,11 +83,30 @@ def train_model(cfg: DictConfig) -> None:
     if cfg.model.save_artifacts:
 
         model_artifact = os.path.join(
-            cfg.data.directory_to_save_models_in, 
+            model_directory, 
             f'{base_model_name}.joblib'
         )
         joblib.dump(model, model_artifact)
         logging.info(f'Model Artifact saved: {model_artifact}')
+
+        val_metrics_json_file = os.path.join(model_directory, 'validation_metrics.json')
+        with open(val_metrics_json_file, 'w') as jfile:
+            jfile.write(json.dumps(validation_metrics))
+            jfile.close()
+        logging.info(f'Model Validation Metrics saved: {val_metrics_json_file}')
+
+        import boto3
+        s3_client = boto3.client('s3')
+        s3_client.put_object(
+            Bucket=cfg.aws.bucket,
+            Key=f'{base_model_name}/model.joblib',
+            Body=model_artifact
+        )
+        s3_client.put_object(
+            Bucket=cfg.aws.bucket,
+            Key=f'{base_model_name}/validation_metrics.json',
+            Body=val_metrics_json_file
+        )
 
 
 if __name__ == "__main__":
