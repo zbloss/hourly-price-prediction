@@ -67,9 +67,7 @@ def main(cfg: DictConfig):
         if not os.path.isdir(directory):
             os.makedirs(directory)
 
-    raw_data_filepath = os.path.join(
-        cfg.raw_file_directory, "raw_data.csv"
-    )
+    raw_data_filepath = os.path.join(cfg.raw_file_directory, "raw_data.csv")
     processed_data_filepath = os.path.join(
         cfg.processed_file_directory, "processed_data.csv"
     )

@@ -98,7 +98,12 @@ class AssetTrader(object):
         return float(account_details["balance"])
 
     def predict(
-        self, open_: float, high_: float, low_: float, close_: float, asset_volume_: float
+        self,
+        open_: float,
+        high_: float,
+        low_: float,
+        close_: float,
+        asset_volume_: float,
     ):
         """Uses self.model to predict the close price 1-hour from now."""
 
@@ -112,16 +117,14 @@ class AssetTrader(object):
         available, if so amount is set to the USD funds. Places a buy
         order.
         """
-        
+
         usd_balance = self.get_account_balance(self.usd_wallet)
 
         if amount > usd_balance:
             amount = usd_balance
 
         buy_order_response = self.private_client.place_market_order(
-            product_id=self.asset,
-            side="buy",
-            funds=str(amount)
+            product_id=self.asset, side="buy", funds=str(amount)
         )
         return buy_order_response
 
@@ -131,27 +134,24 @@ class AssetTrader(object):
         available, if so amount is set to the asset funds. Places a sell
         order.
         """
-        
+
         asset_balance = self.get_account_balance(self.asset_wallet)
 
         if amount > asset_balance:
             amount = asset_balance
 
         sell_order_response = self.private_client.place_market_order(
-            product_id=self.asset,
-            side="sell",
-            funds=str(amount)
+            product_id=self.asset, side="sell", funds=str(amount)
         )
         return sell_order_response
 
     def trading_strategy(
-        self, 
-        model_prediction: float, 
-        threshold_to_act: float, 
-        current_close_price: float, 
+        self,
+        model_prediction: float,
+        threshold_to_act: float,
+        current_close_price: float,
         percent_of_total_money_to_move: float,
         total_money_in_usd: float,
-        
     ):
         """
         Determines whether to buy, sell, or do nothing as well as an amount.
@@ -161,19 +161,19 @@ class AssetTrader(object):
         """
 
         # threshold_to_act = validation_metrics['mae'] / 3
-        action = 'do_nothing'
+        action = "do_nothing"
         if abs(model_prediction - current_close_price) > threshold_to_act:
             if model_prediction - current_close_price > 0:
-                action = 'buy'
+                action = "buy"
             else:
-                action = 'sell'
-        
+                action = "sell"
+
         amount_of_usd_to_exchange = percent_of_total_money_to_move * total_money_in_usd
         amount_of_asset_to_exchange = amount_of_usd_to_exchange / current_close_price
 
-        if action == 'buy':
+        if action == "buy":
             amount_to_exchange = amount_of_usd_to_exchange
-        elif action == 'sell':
+        elif action == "sell":
             amount_to_exchange = amount_of_asset_to_exchange
         else:
             amount_to_exchange = 0.0
