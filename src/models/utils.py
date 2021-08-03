@@ -243,15 +243,19 @@ def download_from_s3(bucket: str, key: str, filename: str, region_name: str = 'u
     return s3_response
 
 
-def write_to_dynamodb(table: str, item: dict, region_name: str = 'us-east-2'):
+def write_to_s3(bucket: str, key: str, filename: str, region_name: str = 'us-east-2'):
     """
-    Given a DynamoDB table and a dictionary you want to store,
-    this function will write the item to the DynamoDB table
+    Given a Bucket and Key, this function will write the file
+    and to the S3 bucket+key location.
     
     """
 
-    assert type(table) == str, f'Provided table is not a string: type(table) {type(table)}'
-    assert type(item) == dict, f'Provided item is not a dict: type(item) {type(item)}'
+    s3_client = boto3.client('s3', region_name='us-east-2')
+    s3_client.put_object(
+        Bucket=cfg.aws.bucket,
+        Key=f'{base_model_name}/validation_metrics.json',
+        Body=val_metrics_json_file
+    )
 
     dynamodb = boto3.resource('dynamodb', region_name=region_name)
     table = dynamodb.Table(table)

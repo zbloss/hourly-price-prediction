@@ -40,10 +40,8 @@ evaluate_all_models:
 	
 build_zip:
 	pip3 install -r lambda_requirements.txt --target ./package
-	cd package
-	zip -r ../lambda-package.zip .
-	cd ..
-	zip -r9 lambda-package.zip src
+	cd package && zip -r ../lambda-package.zip .
+	zip -r lambda-package.zip src
 	rm -rf ./package
 
 

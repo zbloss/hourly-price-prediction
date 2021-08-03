@@ -3,7 +3,7 @@ import json
 import boto3
 import logging
 from models.asset_trader import AssetTrader
-from models.utils import write_to_dynamodb, download_from_s3
+from models.utils import write_to_s3, download_from_s3
 
 asset = os.getenv('ASSET')
 api_secret = os.getenv('API_SECRET')

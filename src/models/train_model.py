@@ -95,18 +95,10 @@ def train_model(cfg: DictConfig) -> None:
             jfile.close()
         logging.info(f'Model Validation Metrics saved: {val_metrics_json_file}')
 
-        import boto3
-        s3_client = boto3.client('s3')
-        s3_client.put_object(
-            Bucket=cfg.aws.bucket,
-            Key=f'{base_model_name}/model.joblib',
-            Body=model_artifact
-        )
-        s3_client.put_object(
-            Bucket=cfg.aws.bucket,
-            Key=f'{base_model_name}/validation_metrics.json',
-            Body=val_metrics_json_file
-        )
+        write_to_s3(cfg.aws.bucket, f'{base_model_name}/model.joblib', model_artifact)
+        write_to_s3(cfg.aws.bucket, f'{base_model_name}/validation_metrics.json', val_metrics_json_file)
+        
+        
 
 
 if __name__ == "__main__":
