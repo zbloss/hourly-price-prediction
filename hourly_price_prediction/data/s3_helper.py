@@ -36,7 +36,7 @@ class S3Helper(object):
 
         return partition
 
-    def download_from_s3(s3_key: str, local_filepath: str):
+    def download_from_s3(self, s3_key: str, local_filepath: str):
         """
         Given an S3 Key, this function will download the file
         and store it at local_filepath.
@@ -44,7 +44,7 @@ class S3Helper(object):
         """
         return self.s3_client.download_file(self.bucket, s3_key, local_filepath)
 
-    def upload_to_s3(s3_key: str, local_filepath: str):
+    def upload_to_s3(self, s3_key: str, local_filepath: str):
         """
         Given a Bucket and Key, this function will write the file
         and to the S3 bucket+key location.
