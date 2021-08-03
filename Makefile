@@ -45,9 +45,10 @@ build_zip:
 	cd package
 	zip -r ../lambda-package.zip .
 	cd ..
-	zip -g lambda-package.zip src/lambda_function.py
-	zip -g lambda-package.zip src/models/asset_trader.py
+	zip -r9 lambda-package.zip src
 	rm -rf ./package
+
+
 	
 
 ## Delete all compiled Python files
