@@ -2,8 +2,9 @@ import os
 import json
 import boto3
 import logging
-from models.asset_trader import AssetTrader
-from models.utils import write_to_s3, download_from_s3
+from hourly_price_prediction.models.asset_trader import AssetTrader
+from hourly_price_prediction.data.s3_helper import S3Helper
+from hourly_price_prediction.models.utils import write_to_s3, download_from_s3
 
 asset = os.getenv('ASSET')
 api_secret = os.getenv('API_SECRET')
@@ -24,17 +25,17 @@ def lambda_handler(event, context):
     joblib_file = '/tmp/model.joblib'
     validation_metrics = '/tmp/validation_metrics.json'
 
-    model_s3_download_response = download_from_s3(
-        bucket, 
-        os.path.join(model_name, 'model.joblib'), 
-        joblib_file
+    data_helper = S3Helper(bucket, region_name)
+
+    data_helper.download_from_s3(
+        s3_key=os.path.join(model_name, 'model.joblib'), 
+        local_filepath=joblib_file
     )
     logging.info('Model Artifact downloaded')
 
-    validation_metrics_download_response = download_from_s3(
-        bucket, 
-        os.path.join(model_name, 'validation_metrics.json'), 
-        validation_metrics
+    data_helper.download_from_s3(
+        s3_key=os.path.join(model_name, 'validation_metrics.json'), 
+        local_filepath=validation_metrics
     )
     logging.info('Validation Metrics downloaded')
 
