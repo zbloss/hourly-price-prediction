@@ -230,3 +230,30 @@ def strategy_simulation(
     percentage_gain_lost = difference_between_final_assets_and_initial_money / initial_money
 
     return (trading_history, percentage_gain_lost)
+
+def download_from_s3(bucket: str, key: str, filename: str, region_name: str = 'us-east-2'):
+    """
+    Given a Bucket and Key, this function will download the file
+    and store it at filename.
+    
+    """
+
+    s3_client = boto3.client('s3', region_name=region_name)
+    s3_response = s3_client.download_file(bucket, key, filename)
+    return s3_response
+
+
+def write_to_dynamodb(table: str, item: dict, region_name: str = 'us-east-2'):
+    """
+    Given a DynamoDB table and a dictionary you want to store,
+    this function will write the item to the DynamoDB table
+    
+    """
+
+    assert type(table) == str, f'Provided table is not a string: type(table) {type(table)}'
+    assert type(item) == dict, f'Provided item is not a dict: type(item) {type(item)}'
+
+    dynamodb = boto3.resource('dynamodb', region_name=region_name)
+    table = dynamodb.Table(table)
+    dynamodb_response = table.put_item(Item=item)
+    return dynamodb_response
