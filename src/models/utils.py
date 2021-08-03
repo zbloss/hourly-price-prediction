@@ -165,9 +165,9 @@ def strategy_simulation(
     the model's performance dictionary on the validation dataset.
     """
 
-    eth_wallet_balance = 0.0
+    asset_wallet_balance = 0.0
     total_assets = 0.0
-    amount_of_eth_to_exchange = 0.0
+    amount_of_asset_to_exchange = 0.0
     amount_of_usd_to_exchange = 0.0
 
     trading_history = []
@@ -187,37 +187,37 @@ def strategy_simulation(
                 action = 'sell'
         
         amount_of_usd_to_exchange = percent_of_total_money_to_move * total_money
-        amount_of_eth_to_exchange = amount_of_usd_to_exchange / current_close
+        amount_of_asset_to_exchange = amount_of_usd_to_exchange / current_close
         
         if total_money <= 0:
             break
         else:
             
             if action == 'sell':
-                if amount_of_eth_to_exchange > eth_wallet_balance:
-                    amount_of_eth_to_exchange = eth_wallet_balance
+                if amount_of_asset_to_exchange > asset_wallet_balance:
+                    amount_of_asset_to_exchange = asset_wallet_balance
 
-                total_money += amount_of_eth_to_exchange * current_close
-                eth_wallet_balance -= amount_of_eth_to_exchange
-                assert eth_wallet_balance >= 0, f'eth_wallet_balance is negative: {eth_wallet_balance}'
+                total_money += amount_of_asset_to_exchange * current_close
+                asset_wallet_balance -= amount_of_asset_to_exchange
+                assert asset_wallet_balance >= 0, f'asset_wallet_balance is negative: {asset_wallet_balance}'
 
             elif action == 'buy':
                 if amount_of_usd_to_exchange > total_money:
                     amount_of_usd_to_exchange = total_money
 
                 total_money -= amount_of_usd_to_exchange
-                eth_wallet_balance += amount_of_eth_to_exchange
+                asset_wallet_balance += amount_of_asset_to_exchange
 
             else:
                 pass
             
-            total_assets = eth_wallet_balance * current_close + total_money
+            total_assets = asset_wallet_balance * current_close + total_money
         
             actions_this_turn = {
                 'action': action,
-                'amount_of_eth_to_exchange': amount_of_eth_to_exchange,
+                'amount_of_asset_to_exchange': amount_of_asset_to_exchange,
                 'amount_of_usd_to_exchange': amount_of_usd_to_exchange,
-                'eth_wallet_balance': eth_wallet_balance,
+                'asset_wallet_balance': asset_wallet_balance,
                 'total_money': total_money,
                 'total_assets': total_assets
             }
