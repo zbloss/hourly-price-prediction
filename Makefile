@@ -35,11 +35,9 @@ train:
 train_all_models:
 	$(PYTHON_INTERPRETER) src/models/train_model.py -m model.model_class=linearregressor,gradientboostingregressor,decisiontreeregressor,kneighborsregressor,mlpregressor,ridge,elasticnet,bayesianridge,huberregressor '++data.csv_file=../../../../data/processed/processed_data.csv' '++data.directory_to_save_training_results_in=../../../../data/model_results' '++data.directory_to_save_models_in=../../../../models'
 
-evaluate_all_models: data/model_results/*
-		for file in $^ ; do \
-        	$(PYTHON_INTERPRETER) src/models/analyze_performance.py --path_to_model_metrics $${file}/model_metrics.csv --path_to_trading_history $${file}/trading_history.csv; \
-		done
-
+evaluate_all_models:
+	$(PYTHON_INTERPRETER) src/models/analyze_performance.py --config-name analyze_all
+	
 build_zip:
 	pip3 install -r lambda_requirements.txt --target ./package
 	cd package
