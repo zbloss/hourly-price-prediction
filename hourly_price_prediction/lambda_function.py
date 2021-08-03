@@ -1,4 +1,5 @@
 import os
+import time
 import json
 import boto3
 import logging
@@ -6,16 +7,15 @@ from hourly_price_prediction.models.asset_trader import AssetTrader
 from hourly_price_prediction.data.s3_helper import S3Helper
 from hourly_price_prediction.models.utils import write_to_s3, download_from_s3
 
-asset = os.getenv('ASSET')
-api_secret = os.getenv('API_SECRET')
-api_key = os.getenv('API_KEY')
-passphrase = os.getenv('PASSPHRASE')
-use_sandbox = os.getenv('USE_SANDBOX')
+asset = str(os.getenv('ASSET'))
+api_secret = str(os.getenv('API_SECRET'))
+api_key = str(os.getenv('API_KEY'))
+passphrase = str(os.getenv('PASSPHRASE'))
+use_sandbox = bool(os.getenv('USE_SANDBOX'))
 
-bucket = os.getenv('S3_BUCKET')
-model_name = os.getenv('MODEL_NAME')
-region_name = os.getenv('REGION_NAME')
-trading_history_table = os.getenv('TRADING_HISTORY_TABLE')
+bucket = str(os.getenv('S3_BUCKET'))
+model_name = str(os.getenv('MODEL_NAME'))
+region_name = str(os.getenv('REGION_NAME'))
 
 
 def lambda_handler(event, context):
@@ -79,6 +79,36 @@ def lambda_handler(event, context):
         order_response = None
         logging.info('Not Making an Order')
     
+    time.sleep(10)
+    usd_wallet = asset_trader.get_account_balance(asset_trader.usd_wallet)
+    asset_wallet = asset_trader.get_account_balance(asset_trader.asset_wallet)
+
+    trading_history = {
+        'model': model_name,
+        'open': open_,
+        'high': high_,
+        'low': low_,
+        'close': current_close_,
+        'volume': volume_,
+        'model_prediction': model_prediction,
+        'action': action,
+        'usd_wallet': usd_wallet,
+        'asset_wallet': asset_wallet,
+    }
+    for key in order_response.keys():
+        trading_history[key] = order_response[key]
+
+    s3_partition = data_helper.generate_partition()
+    trading_history_filename = '{}.json'.format(time.strftime('%Y%m%dT%H%M%S%MS'))
+    with open(f'/tmp/{trading_history_filename}', 'w') as history_jfile:
+        history_jfile.write(json.dumps(trading_history))
+        history_jfile.close()
+
+    data_helper.upload_to_s3(
+        s3_key=f'trading_history/{s3_partition}/{trading_history_filename}', 
+        local_filepath='/tmp/{trading_history_filename}'
+    )
+
     logging.info('Done')
 
     return None
