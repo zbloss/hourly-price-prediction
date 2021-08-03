@@ -27,21 +27,20 @@ requirements: test_environment
 
 ## Make Dataset
 data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py 
+	$(PYTHON_INTERPRETER) hourly_price_prediction/data/make_dataset.py 
 
 train:
-	$(PYTHON_INTERPRETER) src/models/train_model.py
+	$(PYTHON_INTERPRETER) hourly_price_prediction/models/train_model.py
 
 train_all_models:
-	$(PYTHON_INTERPRETER) src/models/train_model.py -m model.model_class=linearregressor,gradientboostingregressor,decisiontreeregressor,kneighborsregressor,mlpregressor,ridge,elasticnet,bayesianridge,huberregressor '++data.csv_file=../../../../data/processed/processed_data.csv' '++data.directory_to_save_training_results_in=../../../../data/model_results' '++data.directory_to_save_models_in=../../../../models'
+	$(PYTHON_INTERPRETER) hourly_price_prediction/models/train_model.py -m model.model_class=linearregressor,gradientboostingregressor,decisiontreeregressor,kneighborsregressor,mlpregressor,ridge,elasticnet,bayesianridge,huberregressor '++data.csv_file=../../../../data/processed/processed_data.csv' '++data.directory_to_save_training_results_in=../../../../data/model_results' '++data.directory_to_save_models_in=../../../../models'
 
 evaluate_all_models:
-	$(PYTHON_INTERPRETER) src/models/analyze_performance.py --config-name analyze_all
+	$(PYTHON_INTERPRETER) hourly_price_prediction/models/analyze_performance.py --config-name analyze_all
 	
 build_zip:
 	pip3 install -r lambda_requirements.txt --target ./package
 	cd package && zip -r ../lambda-package.zip .
-	zip -r lambda-package.zip src
 	rm -rf ./package
 
 
