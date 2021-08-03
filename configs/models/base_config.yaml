@@ -8,3 +8,8 @@ model:
   validation_percentage: 0.2
   test_period_in_days: 14
   save_artifacts: False
+
+aws:
+  bucket: hourly-price-prediction
+  
+  
