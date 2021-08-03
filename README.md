@@ -3,6 +3,7 @@ hourly-price-prediction
 
 Naive Algo-Trading application that uses a Data Science Model for predicting the hourly close price of an asset and then buying or selling that asset based on the prediction.
 
+Click the link below to see the initial demo of the model training and dashboard for exploring the model training results.
 
 [![Initial Demo Link](https://img.youtube.com/vi/h_gaFesvKEY/0.jpg)](https://www.youtube.com/watch?v=h_gaFesvKEY)
 
