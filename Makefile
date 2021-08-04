@@ -45,6 +45,9 @@ build_zip:
 	cd package && zip -r ../lambda-package.zip .
 	rm -rf ./package
 	
+assume_trader_role:
+	eval $(aws sts assume-role --role-arn arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8 --role-session-name githubactions | jq -r '.Credentials | "export AWS_ACCESS_KEY_ID=\(.AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey)\nexport AWS_SESSION_TOKEN=\(.SessionToken)\n"')
+
 upload_lambda_zip_to_s3:
 	aws s3 mv lambda-package.zip s3://$(BUCKET)/zip-archives/lambda-package.zip
 
