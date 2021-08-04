@@ -38,8 +38,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: 3.8
+        python-version: '3.8'
     steps:
+      - uses: chrislennon/action-aws-cli@v1.1
       - uses: actions/checkout@v2
       - name: AWS Authentication
         run: |
