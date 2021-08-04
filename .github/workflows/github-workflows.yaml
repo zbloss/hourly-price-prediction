@@ -64,4 +64,9 @@ jobs:
         function_name: eth-trader
         zip_file: lambda-package.zip
         dry_run: false
+        memory_size: 128
+        timeout: 180
+        runtime: python3.8
+        role: arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8
+        handler: lambda_function.lambda_handler
         environment: ASSET=${{ secrets.ASSET }},API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=${{ secrets.USE_SANDBOX }},S3_BUCKET=${{ secrets.S3_BUCKET }},MODEL_NAME=${{ secrets.MODEL_NAME }},AWS_REGION=${{ secrets.AWS_REGION }}
