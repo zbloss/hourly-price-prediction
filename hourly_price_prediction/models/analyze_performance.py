@@ -2,7 +2,6 @@ import logging
 import os
 
 import hydra
-import numpy as np
 import pandas as pd
 import plotly
 from omegaconf import DictConfig

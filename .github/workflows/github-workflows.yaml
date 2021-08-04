@@ -36,22 +36,33 @@ jobs:
   build_zip_file:
     name: build the lambda function zip file
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: 3.8
     steps:
       - uses: actions/checkout@v2
+      - name: AWS Authentication
+        run: |
+          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Build AWS Lambda Zip File
         run: make build_zip
-      - name: AWS Lambda Deploy
-        uses: appleboy/lambda-action@master
-        with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION }}
-          function_name: eth-trader
-          zip_file: lambda-package.zip
-          dry_run: false
-          memory_size: 128
-          timeout: 180
-          runtime: python3.8
-          role: arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8
-          handler: lambda_function.lambda_handler
-          environment: ASSET=${{ secrets.ASSET }},API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=${{ secrets.USE_SANDBOX }},S3_BUCKET=${{ secrets.S3_BUCKET }},MODEL_NAME=${{ secrets.MODEL_NAME }},AWS_REGION=${{ secrets.AWS_REGION }}
+      - name: Upload Zip to S3
+        run: make upload_lambda_zip_to_s3
+      - name: Update Lambda Function Code
+        run: make deploy_lambda
+      # - name: AWS Lambda Deploy
+      #   uses: appleboy/lambda-action@master
+      #   with:
+      #     aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws_region: ${{ secrets.AWS_REGION }}
+      #     function_name: eth-trader
+      #     zip_file: lambda-package.zip
+      #     dry_run: false
+      #     memory_size: 128
+      #     timeout: 180
+      #     runtime: python3.8
+      #     role: arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8
+      #     handler: lambda_function.lambda_handler
+      #     environment: ASSET=${{ secrets.ASSET }},API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=${{ secrets.USE_SANDBOX }},S3_BUCKET=${{ secrets.S3_BUCKET }},MODEL_NAME=${{ secrets.MODEL_NAME }},AWS_REGION=${{ secrets.AWS_REGION }}

@@ -5,7 +5,7 @@
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
+BUCKET = hourly-price-prediction
 PROFILE = default
 PROJECT_NAME = hourly-price-prediction
 PYTHON_INTERPRETER = python3
@@ -45,6 +45,15 @@ build_zip:
 	cd package && zip -r ../lambda-package.zip .
 	rm -rf ./package
 	
+upload_lambda_zip_to_s3:
+	aws s3 mv lambda-package.zip s3://$(BUCKET)/zip-archives/lambda-package.zip
+
+deploy_lambda:
+	aws lambda update-function-code \
+    	--function-name  eth-trader \
+		--s3-bucket $(BUCKET) \
+		--s3-key zip-archives/lambda-package.zip
+
 
 ## Delete all compiled Python files
 clean:
