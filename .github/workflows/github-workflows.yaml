@@ -37,7 +37,6 @@ jobs:
     name: build the lambda function zip file
     runs-on: ubuntu-latest
     steps:
-      - uses: chrislennon/action-aws-cli@v1.1
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
@@ -53,7 +52,7 @@ jobs:
 
       - name: Upload Zip to S3
         run: make upload_lambda_zip_to_s3
-        
+
       - name: Update Lambda Function Code
         run: make deploy_lambda
       # - name: AWS Lambda Deploy
