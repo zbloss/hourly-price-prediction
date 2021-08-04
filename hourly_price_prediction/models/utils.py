@@ -2,7 +2,6 @@ import boto3
 import logging
 from math import sqrt
 
-import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
@@ -55,7 +54,7 @@ def get_model_class(model_class: str) -> BaseEstimator:
     return model_object
 
 
-def score_metrics(actual_values: np.array, model_predictions: np.array, mode: str) -> dict:
+def score_metrics(actual_values: list, model_predictions: list, mode: str) -> dict:
     """
     Given a set of true values (actual_values) and model predicted values (model_predictions)
     this function will return a dictionary with various regression metrics.

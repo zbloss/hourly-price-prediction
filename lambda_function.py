@@ -5,7 +5,6 @@ import boto3
 import logging
 from hourly_price_prediction.models.asset_trader import AssetTrader
 from hourly_price_prediction.data.s3_helper import S3Helper
-from hourly_price_prediction.models.utils import write_to_s3, download_from_s3
 
 asset = str(os.getenv("ASSET"))
 api_secret = str(os.getenv("API_SECRET"))
