@@ -64,7 +64,8 @@ jobs:
           aws configure set aws_access_key_id $(eval jq .Credentials.AccessKeyId credentials.json)
           aws configure set aws_secret_access_key $(eval jq .Credentials.SecretAccessKey credentials.json)
           aws configure set aws_session_token $(eval jq .Credentials.SessionToken credentials.json)
-
+      - name: Show Assumed Role
+        run: aws sts get-caller-identity
       - name: Build AWS Lambda Zip File
         run: make build_zip
 
