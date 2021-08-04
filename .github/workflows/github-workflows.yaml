@@ -53,7 +53,7 @@ jobs:
         run: |
           aws sts assume-role \
             --role-arn arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8 \
-            --role-session-name=githubactions > credentials.json
+            --role-session-name=githubactions 
         #run: make get_auth_credentials
 
       - name: Assume IAM Role
