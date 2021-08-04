@@ -36,20 +36,24 @@ jobs:
   build_zip_file:
     name: build the lambda function zip file
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: '3.8'
     steps:
       - uses: chrislennon/action-aws-cli@v1.1
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
       - name: AWS Authentication
         run: |
           export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
           export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: Build AWS Lambda Zip File
         run: make build_zip
+
       - name: Upload Zip to S3
         run: make upload_lambda_zip_to_s3
+        
       - name: Update Lambda Function Code
         run: make deploy_lambda
       # - name: AWS Lambda Deploy
