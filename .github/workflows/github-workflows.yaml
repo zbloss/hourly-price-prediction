@@ -44,27 +44,25 @@ jobs:
 
       - name: AWS Authentication
         run: |
-          aws configure set region ${{ secrets.AWS_REGION }}
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }} --profile default
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile default
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile default
 
       - name: Get Auth Credentials
         run: |
           aws sts assume-role \
             --role-arn arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8 \
             --role-session-name=githubactions > credentials.json
-      - name: Clear Credentials
-        run: |
-          unset AWS_ACCESS_KEY_ID
-          unset AWS_SECRET_ACCESS_KEY
-          unset AWS_SESSION_TOKEN
-          aws sts get-caller-identity
+
       - name: Assume IAM Role
         run: |
-          aws configure set aws_access_key_id $(eval jq .Credentials.AccessKeyId credentials.json)
-          aws configure set aws_secret_access_key $(eval jq .Credentials.SecretAccessKey credentials.json)
+          aws configure set aws_access_key_id $(eval jq .Credentials.AccessKeyId credentials.json) --profile default
+          aws configure set aws_secret_access_key $(eval jq .Credentials.SecretAccessKey credentials.json) --profile default
+          aws configure set aws_session_token $(eval jq .Credentials.SessionToken credentials.json) --profile default
+
       - name: Show Assumed Role
         run: aws sts get-caller-identity
+
       - name: Build AWS Lambda Zip File
         run: make build_zip
 

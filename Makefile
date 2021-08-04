@@ -53,13 +53,14 @@ get_auth_credentials:
 		--role-session-name=githubactions > credentials.json
 
 upload_lambda_zip_to_s3:
-	aws s3 mv lambda-package.zip s3://$(BUCKET)/zip-archives/lambda-package.zip
+	aws s3 mv lambda-package.zip s3://$(BUCKET)/zip-archives/lambda-package.zip  --profile default
 
 deploy_lambda:
 	aws lambda update-function-code \
     	--function-name  eth-trader \
 		--s3-bucket $(BUCKET) \
-		--s3-key zip-archives/lambda-package.zip
+		--s3-key zip-archives/lambda-package.zip \
+		--profile default
 
 
 ## Delete all compiled Python files
