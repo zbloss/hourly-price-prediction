@@ -40,10 +40,10 @@ evaluate_all_models:
 	
 build_zip:
 	pip3 install -r lambda_requirements.txt --target ./package
+	zip -g lambda-package.zip lambda_function.py
+	zip -r9 lambda-package.zip hourly_price_prediction
 	cd package && zip -r ../lambda-package.zip .
 	rm -rf ./package
-
-
 	
 
 ## Delete all compiled Python files
