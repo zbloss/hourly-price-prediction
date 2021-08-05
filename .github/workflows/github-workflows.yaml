@@ -63,7 +63,9 @@ jobs:
         run: make build_zip
 
       - name: Upload Zip to S3
-        run: aws s3 mv lambda-package.zip s3://hourly-price-prediction/zip-archives/lambda-package.zip  --profile default
+        run: |
+          aws sts get-caller-identity
+          aws s3 mv lambda-package.zip s3://hourly-price-prediction/zip-archives/lambda-package.zip  --profile default
 
       - name: Update Lambda Function Code
         run: make deploy_lambda
