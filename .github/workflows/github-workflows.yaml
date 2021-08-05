@@ -68,11 +68,4 @@ jobs:
             --function-name eth-trader \
             --timeout 120 \
             --memory-size 128 \
-            --environment ASSET=BTC-USD,\
-                API_SECRET=${{ secrets.COINBASE_API_SECRET }},\
-                API_KEY=${{ secrets.COINBASE_API_KEY }},\
-                PASSPHRASE=${{ secrets.PASSPHRASE }},\
-                USE_SANDBOX=True,\
-                S3_BUCKET=hourly-price-prediction,\
-                MODEL_NAME=linearregressor-20210802T232219,\
-                AWS_REGION=us-east-2
+            --environment ASSET=BTC-USD,API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=True,S3_BUCKET=hourly-price-prediction,MODEL_NAME=linearregressor-20210802T232219,AWS_REGION=us-east-2
