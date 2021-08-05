@@ -58,6 +58,7 @@ jobs:
           aws configure set aws_session_token $(eval jq .Credentials.SessionToken credentials.json) --profile default
           unset AWS_ACCESS_KEY_ID
           unset AWS_SECRET_ACCESS_KEY
+          unset AWS_SESSION_TOKEN
 
       - name: Build AWS Lambda Zip File
         run: make build_zip
