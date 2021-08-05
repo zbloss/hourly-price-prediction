@@ -41,18 +41,6 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.8'
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
-
-      - name: Build AWS Lambda Zip File
-        run: make build_zip
-
-      - name: Upload Zip to S3
-        run: make upload_lambda_zip_to_s3
 
       - name: Assume IAM Role
         uses: aws-actions/configure-aws-credentials@v1
@@ -64,6 +52,13 @@ jobs:
           role-external-id: ${{ secrets.AWS_ROLE_EXTERNAL_ID }}
           role-duration-seconds: 120
           role-session-name: GithubActionsSession
+
+      - name: Build AWS Lambda Zip File
+        run: make build_zip
+
+      - name: Upload Zip to S3
+        run: make upload_lambda_zip_to_s3
+
 
       - name: Update Lambda Function Code
         run: make deploy_lambda
