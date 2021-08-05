@@ -251,9 +251,5 @@ def write_to_s3(bucket: str, key: str, filename: str, region_name: str = 'us-eas
     """
 
     s3_client = boto3.client('s3', region_name='us-east-2')
-    s3_response = s3_client.put_object(
-        Bucket=cfg.aws.bucket,
-        Key=f'{base_model_name}/validation_metrics.json',
-        Body=val_metrics_json_file
-    )
+    s3_response = s3_client.upload_file(filename, bucket, key)
     return s3_response

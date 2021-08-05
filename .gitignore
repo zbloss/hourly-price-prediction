@@ -27,6 +27,7 @@ outputs/
 multirun/
 lambda-package.zip
 package/
+models/
 
 
 # PyInstaller

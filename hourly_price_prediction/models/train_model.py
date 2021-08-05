@@ -11,7 +11,8 @@ from utils import (
     get_model_class,
     strategy_simulation,
     train_test_val_split,
-    training_pipeline,
+    training_pipeline, 
+    write_to_s3
 )
 
 
@@ -115,7 +116,7 @@ def train_model(cfg: DictConfig) -> None:
         write_to_s3(
             cfg.aws.bucket,
             f"{base_model_name}/validation_metrics.json",
-            val_metrics_json_file,
+            val_metrics_json_file
         )
 
 
