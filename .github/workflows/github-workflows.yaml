@@ -49,10 +49,7 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile default
 
       - name: Get Auth Credentials
-        run: |
-          aws sts assume-role \
-            --role-arn arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8 \
-            --role-session-name=githubactions > credentials.json
+        run: make get_auth_credentials
 
       - name: Assume IAM Role
         run: |

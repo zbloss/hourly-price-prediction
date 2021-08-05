@@ -50,7 +50,7 @@ build_zip:
 get_auth_credentials:
 	aws sts assume-role \
 		--role-arn arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8 \
-		--role-session-name=githubactions > credentials.json
+		--role-session-name=githubactions --profile default > credentials.json
 
 upload_lambda_zip_to_s3:
 	aws s3 mv lambda-package.zip s3://$(BUCKET)/zip-archives/lambda-package.zip  --profile default
