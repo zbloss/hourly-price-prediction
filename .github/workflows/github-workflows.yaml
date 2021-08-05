@@ -53,6 +53,7 @@ jobs:
 
       - name: Assume IAM Role
         run: |
+          rm -rf ~/.aws/credentials
           aws configure set aws_access_key_id $(eval jq .Credentials.AccessKeyId credentials.json) --profile default
           aws configure set aws_secret_access_key $(eval jq .Credentials.SecretAccessKey credentials.json) --profile default
           aws configure set aws_session_token $(eval jq .Credentials.SessionToken credentials.json) --profile default
