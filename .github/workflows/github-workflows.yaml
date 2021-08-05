@@ -59,6 +59,20 @@ jobs:
       - name: Upload Zip to S3
         run: make upload_lambda_zip_to_s3
 
-
       - name: Update Lambda Function Code
         run: make deploy_lambda
+
+      - name: Update Lambda Environment Variables
+        run: |
+          aws update-function-configuration \
+            --function-name eth-trader \
+            --timeout 120 \
+            --memory-size 128 \
+            --environment ASSET=BTC-USD,\
+                API_SECRET=${{ secrets.COINBASE_API_SECRET }},\
+                API_KEY=${{ secrets.COINBASE_API_KEY }},\
+                PASSPHRASE=${{ secrets.PASSPHRASE }},\
+                USE_SANDBOX=True,\
+                S3_BUCKET=hourly-price-prediction,\
+                MODEL_NAME=linearregressor-20210802T232219,\
+                AWS_REGION=us-east-2
