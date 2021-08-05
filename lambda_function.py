@@ -14,7 +14,7 @@ use_sandbox = bool(os.getenv("USE_SANDBOX"))
 
 bucket = str(os.getenv("S3_BUCKET"))
 model_name = str(os.getenv("MODEL_NAME"))
-region_name = str(os.getenv("AWS_REGION"))
+region_name = str(os.getenv("REGION_NAME"))
 
 
 def lambda_handler(event, context):
