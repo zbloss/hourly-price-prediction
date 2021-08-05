@@ -56,7 +56,7 @@ jobs:
           aws configure set aws_access_key_id $(eval jq .Credentials.AccessKeyId credentials.json) --profile default
           aws configure set aws_secret_access_key $(eval jq .Credentials.SecretAccessKey credentials.json) --profile default
           aws configure set aws_session_token $(eval jq .Credentials.SessionToken credentials.json) --profile default
-
+          cat ~/.aws/credentials
       - name: Build AWS Lambda Zip File
         run: make build_zip
 
