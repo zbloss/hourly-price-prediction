@@ -64,7 +64,7 @@ jobs:
 
       - name: Update Lambda Environment Variables
         run: |
-          aws update-function-configuration \
+          aws lambda update-function-configuration \
             --function-name eth-trader \
             --timeout 120 \
             --memory-size 128 \
