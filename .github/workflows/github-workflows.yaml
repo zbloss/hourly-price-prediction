@@ -61,12 +61,8 @@ jobs:
           docker tag  asset-trader:latest 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest
           docker push 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest
 
-      - name: Update Lambda Function Code
-        run: make deploy_lambda
-
       - name: Update Lambda Environment Variables
         run: |
-
           aws lambda update-function-configuration \
             --function-name asset-trader \
             --role ${{ secrets.AWS_ROLE_TO_ASSUME }} \
