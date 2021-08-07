@@ -1,19 +1,14 @@
+import json
 import logging
 import os
+import pickle
 import time
-import json
 
 import hydra
-import pickle
 import pandas as pd
 from omegaconf import DictConfig
-from utils import (
-    get_model_class,
-    strategy_simulation,
-    train_test_val_split,
-    training_pipeline, 
-    write_to_s3
-)
+from utils import (get_model_class, strategy_simulation, train_test_val_split,
+                   training_pipeline, write_to_s3)
 
 
 @hydra.main(config_path="../../configs/models", config_name="linear_config")
@@ -73,7 +68,8 @@ def train_model(cfg: DictConfig) -> None:
     model_directories = [
         cfg.data.directory_to_save_models_in,
         cfg.data.directory_to_save_training_results_in,
-        os.path.join(cfg.data.directory_to_save_training_results_in, base_model_name),
+        os.path.join(
+            cfg.data.directory_to_save_training_results_in, base_model_name),
         model_directory,
     ]
     for directory in model_directories:
@@ -89,7 +85,8 @@ def train_model(cfg: DictConfig) -> None:
     )
     logging.info("Trading History Saved")
 
-    metrics_dataframe = pd.DataFrame([train_metrics, validation_metrics, test_metrics])
+    metrics_dataframe = pd.DataFrame(
+        [train_metrics, validation_metrics, test_metrics])
     metrics_dataframe.to_csv(
         os.path.join(
             cfg.data.directory_to_save_training_results_in,
@@ -102,19 +99,23 @@ def train_model(cfg: DictConfig) -> None:
 
     if cfg.model.save_artifacts:
 
-        model_artifact = os.path.join(model_directory, f"{base_model_name}.pickle")
+        model_artifact = os.path.join(
+            model_directory, f"{base_model_name}.pickle")
         with open(model_artifact, 'wb') as mfile:
             pickle.dump(model, mfile)
             mfile.close()
         logging.info(f"Model Artifact saved: {model_artifact}")
 
-        val_metrics_json_file = os.path.join(model_directory, "validation_metrics.json")
+        val_metrics_json_file = os.path.join(
+            model_directory, "validation_metrics.json")
         with open(val_metrics_json_file, "w") as jfile:
             jfile.write(json.dumps(validation_metrics))
             jfile.close()
-        logging.info(f"Model Validation Metrics saved: {val_metrics_json_file}")
+        logging.info(
+            f"Model Validation Metrics saved: {val_metrics_json_file}")
 
-        write_to_s3(cfg.aws.bucket, f"{base_model_name}/model.pickle", model_artifact)
+        write_to_s3(cfg.aws.bucket,
+                    f"{base_model_name}/model.pickle", model_artifact)
         write_to_s3(
             cfg.aws.bucket,
             f"{base_model_name}/validation_metrics.json",

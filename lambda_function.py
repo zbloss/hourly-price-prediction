@@ -1,9 +1,11 @@
+import json
 import os
 import time
-import json
+
 import boto3
-from .hourly_price_prediction.models.asset_trader import AssetTrader
-from .hourly_price_prediction.data.s3_helper import S3Helper
+
+from hourly_price_prediction.data.s3_helper import S3Helper
+from hourly_price_prediction.models.asset_trader import AssetTrader
 
 asset = str(os.getenv("ASSET"))
 api_secret = str(os.getenv("API_SECRET"))
@@ -35,7 +37,7 @@ def lambda_handler(event, context):
 
     with open(validation_metrics, "r") as val_json_file:
         raw_json_data = val_json_file.read()
-        print(f'raw_json_data: {raw_json_data}')
+        print(f"raw_json_data: {raw_json_data}")
         val_metrics = json.loads(raw_json_data)
         val_json_file.close()
 
@@ -49,12 +51,13 @@ def lambda_handler(event, context):
     last_hour_asset = asset_trader.get_asset_details_last_hour(
         start=start_datetime, end=end_datetime
     )
-    open_ = last_hour_asset['open']
-    high_ = last_hour_asset['high']
-    low_ = last_hour_asset['low']
-    current_close_ = last_hour_asset['close']
-    volume_ = last_hour_asset['volume']
-    model_prediction = asset_trader.predict(open_, high_, low_, current_close_, volume_)
+    open_ = last_hour_asset["open"]
+    high_ = last_hour_asset["high"]
+    low_ = last_hour_asset["low"]
+    current_close_ = last_hour_asset["close"]
+    volume_ = last_hour_asset["volume"]
+    model_prediction = asset_trader.predict(
+        open_, high_, low_, current_close_, volume_)
 
     action, amount = asset_trader.trading_strategy(
         model_prediction=model_prediction,
@@ -96,7 +99,8 @@ def lambda_handler(event, context):
         trading_history[key] = order_response[key]
 
     s3_partition = data_helper.generate_partition()
-    trading_history_filename = "{}.json".format(time.strftime("%Y%m%dT%H%M%S%MS"))
+    trading_history_filename = "{}.json".format(
+        time.strftime("%Y%m%dT%H%M%S%MS"))
     with open(f"/tmp/{trading_history_filename}", "w") as history_jfile:
         history_jfile.write(json.dumps(trading_history))
         history_jfile.close()

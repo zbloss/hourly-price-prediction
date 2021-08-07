@@ -1,10 +1,10 @@
 import logging
 import os
-import hydra
-from omegaconf import DictConfig
 
+import hydra
 import pandas as pd
 import requests
+from omegaconf import DictConfig
 
 
 def download_csv_file(url_path_to_csv_file: str) -> bytes:
@@ -37,7 +37,8 @@ def process_raw_data(raw_data_filepath: str, processed_data_filepath: str) -> No
         try:
             raw_data.drop(column, axis=1, inplace=True)
         except IndexError as e:
-            logger.warn(f"Unable to drop column from the raw dataframe: {column} | {e}")
+            logger.warn(
+                f"Unable to drop column from the raw dataframe: {column} | {e}")
             pass
 
     raw_data = raw_data.rename(

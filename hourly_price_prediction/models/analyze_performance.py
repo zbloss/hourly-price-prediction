@@ -1,12 +1,11 @@
 import logging
 import os
+from glob import glob
 
 import hydra
 import pandas as pd
 import plotly
 from omegaconf import DictConfig
-from glob import glob
-
 from performance_analyzer import PerformanceAnalyzer
 
 
@@ -25,7 +24,8 @@ def performance_pipeline(cfg: DictConfig):
         path_to_model_metrics=path_to_model_metrics,
         path_to_trading_history=path_to_trading_history,
     )
-    analysis_directory = os.path.join(cfg.data.output_directory, cfg.data.model_name)
+    analysis_directory = os.path.join(
+        cfg.data.output_directory, cfg.data.model_name)
     figures_directory = os.path.join(
         cfg.data.output_directory, "figures", cfg.data.model_name
     )

@@ -1,15 +1,16 @@
-import os
 import json
+import os
+import sys
+from glob import glob
+from pathlib import Path
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-from glob import glob
-from pathlib import Path
-import sys
+from src.models.performance_analyzer import PerformanceAnalyzer
 
 sys.path.insert(0, "..")
-from src.models.performance_analyzer import PerformanceAnalyzer
 
 external_stylesheets = [
     "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -61,11 +62,14 @@ app.layout = html.Div(
 )
 def total_assets(model_dropdown):
     _, model_name = os.path.split(model_dropdown)
-    base_model_path = os.path.join(project_dir, "data", "model_results", model_name)
+    base_model_path = os.path.join(
+        project_dir, "data", "model_results", model_name)
 
     analyzer = PerformanceAnalyzer(
-        path_to_model_metrics=os.path.join(base_model_path, "model_metrics.csv"),
-        path_to_trading_history=os.path.join(base_model_path, "trading_history.csv"),
+        path_to_model_metrics=os.path.join(
+            base_model_path, "model_metrics.csv"),
+        path_to_trading_history=os.path.join(
+            base_model_path, "trading_history.csv"),
     )
 
     percentage_assets_html = analyzer.generate_line_plot(
@@ -87,11 +91,14 @@ def total_assets(model_dropdown):
 def kpi_graph(model_dropdown):
 
     _, model_name = os.path.split(model_dropdown)
-    base_model_path = os.path.join(project_dir, "data", "model_results", model_name)
+    base_model_path = os.path.join(
+        project_dir, "data", "model_results", model_name)
 
     analyzer = PerformanceAnalyzer(
-        path_to_model_metrics=os.path.join(base_model_path, "model_metrics.csv"),
-        path_to_trading_history=os.path.join(base_model_path, "trading_history.csv"),
+        path_to_model_metrics=os.path.join(
+            base_model_path, "model_metrics.csv"),
+        path_to_trading_history=os.path.join(
+            base_model_path, "trading_history.csv"),
     )
 
     current_total_assets = analyzer.trading_history.total_assets.values[-1]

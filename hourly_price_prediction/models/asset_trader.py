@@ -1,8 +1,8 @@
+import pickle
 import time
 from datetime import datetime, timedelta
 
 import cbpro
-import pickle
 from urllib3.exceptions import ConnectionError, ProtocolError
 
 
