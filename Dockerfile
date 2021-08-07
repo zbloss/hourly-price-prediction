@@ -9,6 +9,8 @@ COPY hourly_price_prediction/data/__init__.py ./hourly_price_prediction/data/__i
 COPY hourly_price_prediction/data/s3_helper.py ./hourly_price_prediction/data/s3_helper.py
 COPY hourly_price_prediction/models/asset_trader.py ./hourly_price_prediction/models/asset_trader.py
 
+RUN touch __init__.py
+
 RUN pip install -r lambda_requirements.txt
 
 CMD ["lambda_function.lambda_handler"]
