@@ -5,11 +5,12 @@ COPY lambda_function.py ./
 
 RUN mkdir hourly_price_prediction
 
-COPY hourly_price_prediction/data/__init__.py ./hourly_price_prediction/data/__init__.py
 COPY hourly_price_prediction/data/s3_helper.py ./hourly_price_prediction/data/s3_helper.py
 COPY hourly_price_prediction/models/asset_trader.py ./hourly_price_prediction/models/asset_trader.py
 
-RUN touch __init__.py
+RUN touch ./hourly_price_prediction/__init__.py && \
+    touch ./hourly_price_prediction/data/__init__.py && \
+    touch ./hourly_price_prediction/models/__init__.py
 
 RUN pip install -r lambda_requirements.txt
 
