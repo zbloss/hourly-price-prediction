@@ -63,7 +63,7 @@ def lambda_handler(event, context):
 
     action, amount = asset_trader.trading_strategy(
         model_prediction=model_prediction,
-        threshold_to_act=float(validation_metrics["mae"]) / 3,
+        threshold_to_act=float(val_metrics["mae"]) / 3,
         current_close_price=current_close_,
         percent_of_total_money_to_move=0.10,
         total_money_in_usd=usd_wallet,
