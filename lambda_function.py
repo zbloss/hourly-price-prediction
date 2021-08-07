@@ -46,12 +46,14 @@ def lambda_handler(event, context):
     asset_wallet = asset_trader.get_account_balance(asset_trader.asset_wallet)
 
     start_datetime, end_datetime = asset_trader._get_start_end_iso_times()
-    last_hour_asset_values = asset_trader.get_asset_details_last_hour(
+    last_hour_asset = asset_trader.get_asset_details_last_hour(
         start=start_datetime, end=end_datetime
     )
-    open_, high_, low_, current_close_, volume_ = last_hour_asset_values.reshape(
-        -1
-    ).tolist()
+    open_ = last_hour_asset['open']
+    high_ = last_hour_asset['high']
+    low_ = last_hour_asset['low']
+    current_close_ = last_hour_asset['close']
+    volume_ = last_hour_asset['volume']
     model_prediction = asset_trader.predict(open_, high_, low_, current_close_, volume_)
 
     action, amount = asset_trader.trading_strategy(

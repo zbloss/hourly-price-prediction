@@ -2,7 +2,6 @@ import time
 from datetime import datetime, timedelta
 
 import cbpro
-import pandas as pd
 import pickle
 from urllib3.exceptions import ConnectionError, ProtocolError
 
@@ -80,16 +79,8 @@ class AssetTrader(object):
             historic_data = self.public_client.get_product_historic_rates(
                 product_id=self.asset, start=start, end=end, granularity=granularity
             )
-        historic_data = pd.DataFrame(
-            historic_data,
-            columns=["timestamp", "low", "high", "open", "close", "volume"],
-        )
-        historic_data["timestamp"] = pd.to_datetime(
-            historic_data["timestamp"], unit="s"
-        )
-        historic_data = historic_data[["open", "high", "low", "close", "volume"]]
 
-        return historic_data.values
+        return historic_data
 
     def get_account_balance(self, account_id: str):
         """Retrieves the account balance for a given account_id"""
