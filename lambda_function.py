@@ -1,3 +1,5 @@
+print("Name is ({})".format(__name__))
+
 import os
 import time
 import json
