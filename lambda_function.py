@@ -105,6 +105,7 @@ def lambda_handler(event, context):
     s3_partition = data_helper.generate_partition()
     trading_history_filename = "{}.json".format(
         time.strftime("%Y%m%dT%H%M%S%MS"))
+        
     with open(f"/tmp/{trading_history_filename}", "w") as history_jfile:
         history_jfile.write(json.dumps(trading_history))
         history_jfile.close()
