@@ -108,7 +108,7 @@ class AssetTrader(object):
         """Uses self.model to predict the close price 1-hour from now."""
 
         batch = [open_, high_, low_, close_, asset_volume_]
-        model_prediction = self.model(batch)
+        model_prediction = self.model.predict(batch)
         return model_prediction
 
     def place_buy_order(self, amount: float):
