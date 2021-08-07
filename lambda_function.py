@@ -59,7 +59,8 @@ def lambda_handler(event, context):
     volume_ = last_hour_asset["volume"]
     model_prediction = asset_trader.predict(
         open_, high_, low_, current_close_, volume_
-    )
+    )[0]
+
 
     action, amount = asset_trader.trading_strategy(
         model_prediction=model_prediction,
