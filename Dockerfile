@@ -1,6 +1,6 @@
 FROM public.ecr.aws/lambda/python:3.8
 
-RUN mkdir /tmp/project
+RUN mkdir -p /tmp/project
 
 COPY lambda_requirements.txt /tmp/project/lambda_requirements.txt
 COPY lambda_function.py /tmp/project/lambda_function.py
