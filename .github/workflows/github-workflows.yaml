@@ -54,6 +54,13 @@ jobs:
           role-duration-seconds: 900
           role-session-name: GithubActionsSession
 
+      - name: AWS ECR Auth
+        run: |
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 193172378049.dkr.ecr.us-east-2.amazonaws.com
+          docker build -t asset-trader .
+          docker tag  asset-trader:latest 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest
+          docker push 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest
+
       - name: Build AWS Lambda Zip File
         run: make build_zip
 
@@ -65,9 +72,8 @@ jobs:
 
       - name: Update Lambda Environment Variables
         run: |
+
           aws lambda update-function-configuration \
             --function-name eth-trader \
-            --timeout 120 \
-            --memory-size 128 \
             --role ${{ secrets.AWS_ROLE_TO_ASSUME }} \
             --environment "Variables={ASSET=BTC-USD,API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=True,S3_BUCKET=hourly-price-prediction,MODEL_NAME=linearregressor-20210807T000802,REGION_NAME=us-east-2}"

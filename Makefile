@@ -39,14 +39,9 @@ evaluate_all_models:
 	$(PYTHON_INTERPRETER) hourly_price_prediction/models/analyze_performance.py --config-name analyze_all
 	
 build_zip:
-	pip3 install -r lambda_requirements.txt --target ./package
 	zip -g lambda-package.zip lambda_function.py
 	zip -r9 lambda-package.zip hourly_price_prediction
-	cd package && zip -r ../lambda-package.zip .
-	rm -rf ./package
-
-## eval $(aws sts assume-role --role-arn arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8 --role-session-name githubactions | jq -r '.Credentials | "export AWS_ACCESS_KEY_ID=\(.AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey)\nexport AWS_SESSION_TOKEN=\(.SessionToken)\n"')	
-
+	
 get_auth_credentials:
 	aws sts assume-role \
 		--role-arn arn:aws:iam::193172378049:role/service-role/eth-trader-role-cc3rhfy8 \
@@ -59,8 +54,8 @@ deploy_lambda:
 	aws lambda update-function-code \
     	--function-name  eth-trader \
 		--s3-bucket $(BUCKET) \
-		--s3-key zip-archives/lambda-package.zip
-
+		--s3-key zip-archives/lambda-package.zip \
+    	--image-uri 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest \
 
 ## Delete all compiled Python files
 clean:
