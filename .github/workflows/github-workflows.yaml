@@ -34,12 +34,6 @@ jobs:
           docker tag  asset-trader:latest 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest
           docker push 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest
 
-      - name: Update Lambda Function Code
-        run: |
-          aws lambda update-function-code \
-            --function-name asset-trader \
-            --image-uri 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest 
-
       - name: Update Lambda Environment Variables
         run: |
           aws lambda update-function-configuration \
@@ -47,3 +41,9 @@ jobs:
             --timeout 120 \
             --role ${{ secrets.AWS_ROLE_TO_ASSUME }} \
             --environment "Variables={ASSET=BTC-USD,API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=True,S3_BUCKET=hourly-price-prediction,MODEL_NAME=linearregressor-20210807T000802,REGION_NAME=us-east-2}"
+   
+      - name: Update Lambda Function Code
+        run: |
+          aws lambda update-function-code \
+            --function-name asset-trader \
+            --image-uri 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest 

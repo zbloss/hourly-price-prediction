@@ -1,12 +1,8 @@
 FROM public.ecr.aws/lambda/python:3.8
 
-RUN mkdir -p /tmp/project
-
-COPY lambda_requirements.txt /tmp/project/lambda_requirements.txt
-COPY lambda_function.py /tmp/project/lambda_function.py
-COPY hourly_price_prediction /tmp/project/hourly_price_prediction
-
-WORKDIR /tmp/project
+COPY lambda_requirements.txt lambda_requirements.txt
+COPY lambda_function.py lambda_function.py
+COPY hourly_price_prediction hourly_price_prediction
 
 RUN pip install -r lambda_requirements.txt
 
