@@ -38,8 +38,8 @@ class AssetTrader(object):
                     self.usd_wallet = account["id"]
                 elif account["currency"] == self.asset.split("-")[0]:
                     self.asset_wallet = account["id"]
-        except TypeError:
-            print(f'Error retrieving account information: {self.accounts}')
+        except TypeError as e:
+            print(f'Error retrieving account information: {self.accounts}\n{e}')
 
         with open(pickle_file, 'rb') as pfile:
             self.model = pickle.load(pfile)
