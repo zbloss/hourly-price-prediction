@@ -32,13 +32,13 @@ class AssetTrader(object):
             api_url=api_url,
         )
         self.accounts = self.private_client.get_accounts()
-        if type(self.accounts) == dict:
+        try:
             for account in self.accounts:
                 if account["currency"] == "USD":
                     self.usd_wallet = account["id"]
                 elif account["currency"] == self.asset.split("-")[0]:
                     self.asset_wallet = account["id"]
-        else:
+        except TypeError:
             print(f'Error retrieving account information: {self.accounts}')
 
         with open(pickle_file, 'rb') as pfile:
