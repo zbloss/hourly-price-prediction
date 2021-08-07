@@ -2,8 +2,8 @@ import os
 import time
 import json
 import boto3
-from hourly_price_prediction.models.asset_trader import AssetTrader
-from hourly_price_prediction.data.s3_helper import S3Helper
+from .hourly_price_prediction.models.asset_trader import AssetTrader
+from .hourly_price_prediction.data.s3_helper import S3Helper
 
 asset = str(os.getenv("ASSET"))
 api_secret = str(os.getenv("API_SECRET"))
