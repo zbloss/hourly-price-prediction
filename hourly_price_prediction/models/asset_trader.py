@@ -79,8 +79,17 @@ class AssetTrader(object):
             historic_data = self.public_client.get_product_historic_rates(
                 product_id=self.asset, start=start, end=end, granularity=granularity
             )
+        
+        historic_dataset = {
+            'timestamp': historic_data[0][0],
+            'open': historic_data[0][1],
+            'high': historic_data[0][2],
+            'low': historic_data[0][3],
+            'close': historic_data[0][4],
+            'volume': historic_data[0][5]
+        }
 
-        return historic_data
+        return historic_dataset
 
     def get_account_balance(self, account_id: str):
         """Retrieves the account balance for a given account_id"""

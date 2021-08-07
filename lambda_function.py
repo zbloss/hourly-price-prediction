@@ -7,9 +7,6 @@ import boto3
 from hourly_price_prediction.data.s3_helper import S3Helper
 from hourly_price_prediction.models.asset_trader import AssetTrader
 
-print(f'In the lambda function: {os.listdir()}')
-logging.info(f'In the lambda function: {os.listdir()}')
-
 asset = str(os.getenv("ASSET"))
 api_secret = str(os.getenv("API_SECRET"))
 api_key = str(os.getenv("API_KEY"))
@@ -54,13 +51,15 @@ def lambda_handler(event, context):
     last_hour_asset = asset_trader.get_asset_details_last_hour(
         start=start_datetime, end=end_datetime
     )
+    timestamp = last_hour_asset["timestamp"]
     open_ = last_hour_asset["open"]
     high_ = last_hour_asset["high"]
     low_ = last_hour_asset["low"]
     current_close_ = last_hour_asset["close"]
     volume_ = last_hour_asset["volume"]
     model_prediction = asset_trader.predict(
-        open_, high_, low_, current_close_, volume_)
+        open_, high_, low_, current_close_, volume_
+    )
 
     action, amount = asset_trader.trading_strategy(
         model_prediction=model_prediction,
@@ -97,6 +96,7 @@ def lambda_handler(event, context):
         "action": action,
         "usd_wallet": usd_wallet,
         "asset_wallet": asset_wallet,
+        "timestamp": timestamp
     }
     for key in order_response.keys():
         trading_history[key] = order_response[key]
