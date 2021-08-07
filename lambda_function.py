@@ -4,8 +4,8 @@ import time
 import logging
 import boto3
 
-#from hourly_price_prediction.data.s3_helper import S3Helper
-#from hourly_price_prediction.models.asset_trader import AssetTrader
+from hourly_price_prediction.data.s3_helper import S3Helper
+from hourly_price_prediction.models.asset_trader import AssetTrader
 
 print(f'In the lambda function: {os.listdir()}')
 logging.info(f'In the lambda function: {os.listdir()}')
