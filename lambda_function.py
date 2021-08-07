@@ -17,13 +17,13 @@ region_name = str(os.getenv("REGION_NAME"))
 
 
 def lambda_handler(event, context):
-    joblib_file = "/tmp/model.joblib"
+    pickle_file = "/tmp/model.pickle"
     validation_metrics = "/tmp/validation_metrics.json"
 
     data_helper = S3Helper(bucket, region_name)
 
     data_helper.download_from_s3(
-        s3_key=os.path.join(model_name, "model.joblib"), local_filepath=joblib_file
+        s3_key=os.path.join(model_name, "model.pickle"), local_filepath=pickle_file
     )
     print("Model Artifact downloaded")
 
@@ -40,7 +40,7 @@ def lambda_handler(event, context):
         val_json_file.close()
 
     asset_trader = AssetTrader(
-        asset, api_secret, api_key, passphrase, joblib_file, use_sandbox
+        asset, api_secret, api_key, passphrase, pickle_file, use_sandbox
     )
     usd_wallet = asset_trader.get_account_balance(asset_trader.usd_wallet)
     asset_wallet = asset_trader.get_account_balance(asset_trader.asset_wallet)

@@ -70,4 +70,4 @@ jobs:
             --timeout 120 \
             --memory-size 128 \
             --role ${{ secrets.AWS_ROLE_TO_ASSUME }} \
-            --environment "Variables={ASSET=BTC-USD,API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=True,S3_BUCKET=hourly-price-prediction,MODEL_NAME=linearregressor-20210804T213107,REGION_NAME=us-east-2}"
+            --environment "Variables={ASSET=BTC-USD,API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=True,S3_BUCKET=hourly-price-prediction,MODEL_NAME=linearregressor-20210807T000802,REGION_NAME=us-east-2}"

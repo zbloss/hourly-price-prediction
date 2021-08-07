@@ -2,9 +2,8 @@ import time
 from datetime import datetime, timedelta
 
 import cbpro
-import joblib
 import pandas as pd
-from joblib import load
+import pickle
 from urllib3.exceptions import ConnectionError, ProtocolError
 
 
@@ -15,7 +14,7 @@ class AssetTrader(object):
         api_secret: str,
         api_key: str,
         passphrase: str,
-        joblib_file: str,
+        pickle_file: str,
         use_sandbox: bool = True,
     ):
         self.asset = asset
@@ -39,8 +38,9 @@ class AssetTrader(object):
                 self.usd_wallet = account["id"]
             elif account["currency"] == self.asset.split("-")[0]:
                 self.asset_wallet = account["id"]
-
-        self.model = joblib.load(joblib_file)
+        with open(pickle_file, 'rb') as pfile:
+            self.model = pickle.load(pfile)
+            pfile.close()
 
     def _get_start_end_iso_times(self, hours: int = 1):
         """

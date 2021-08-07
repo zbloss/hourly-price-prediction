@@ -4,7 +4,7 @@ import time
 import json
 
 import hydra
-import joblib
+import pickle
 import pandas as pd
 from omegaconf import DictConfig
 from utils import (
@@ -102,8 +102,10 @@ def train_model(cfg: DictConfig) -> None:
 
     if cfg.model.save_artifacts:
 
-        model_artifact = os.path.join(model_directory, f"{base_model_name}.joblib")
-        joblib.dump(model, model_artifact)
+        model_artifact = os.path.join(model_directory, f"{base_model_name}.pickle")
+        with open(model_artifact, 'wb') as mfile:
+            pickle.dump(model, mfile)
+            mfile.close()
         logging.info(f"Model Artifact saved: {model_artifact}")
 
         val_metrics_json_file = os.path.join(model_directory, "validation_metrics.json")
@@ -112,7 +114,7 @@ def train_model(cfg: DictConfig) -> None:
             jfile.close()
         logging.info(f"Model Validation Metrics saved: {val_metrics_json_file}")
 
-        write_to_s3(cfg.aws.bucket, f"{base_model_name}/model.joblib", model_artifact)
+        write_to_s3(cfg.aws.bucket, f"{base_model_name}/model.pickle", model_artifact)
         write_to_s3(
             cfg.aws.bucket,
             f"{base_model_name}/validation_metrics.json",
