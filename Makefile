@@ -52,7 +52,7 @@ upload_lambda_zip_to_s3:
 
 deploy_lambda:
 	aws lambda update-function-code \
-    	--function-name  eth-trader \
+    	--function-name asset-trader \
     	--image-uri 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest
 
 ## --s3-bucket $(BUCKET) \
