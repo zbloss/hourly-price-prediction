@@ -61,12 +61,6 @@ jobs:
           docker tag  asset-trader:latest 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest
           docker push 193172378049.dkr.ecr.us-east-2.amazonaws.com/asset-trader:latest
 
-      - name: Build AWS Lambda Zip File
-        run: make build_zip
-
-      - name: Upload Zip to S3
-        run: make upload_lambda_zip_to_s3
-
       - name: Update Lambda Function Code
         run: make deploy_lambda
 
