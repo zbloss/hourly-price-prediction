@@ -14,4 +14,6 @@ RUN touch ./hourly_price_prediction/__init__.py && \
 
 RUN pip install -r lambda_requirements.txt
 
+RUN export PYTHONPATH=$PYTHONPATH:./hourly_price_prediction
+
 CMD ["lambda_function.lambda_handler"]
