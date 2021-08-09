@@ -119,7 +119,7 @@ def lambda_handler(event, context):
 
     data_helper.upload_to_s3(
         s3_key=f"trading_history/{s3_partition}/{trading_history_filename}",
-        local_filepath="/tmp/{trading_history_filename}",
+        local_filepath=f"/tmp/{trading_history_filename}",
     )
 
     print("Done")
