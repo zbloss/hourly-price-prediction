@@ -51,6 +51,7 @@ class S3Helper(object):
         and to the S3 bucket+key location.
 
         """
-        return self.s3_client.put_object(
-            Bucket=self.bucket, Key=s3_key, Body=local_filepath
+
+        return self.s3_client.upload_file(
+            local_filepath, self.bucket, s3_key, 
         )
