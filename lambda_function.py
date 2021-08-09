@@ -17,6 +17,15 @@ bucket = str(os.getenv("S3_BUCKET"))
 model_name = str(os.getenv("MODEL_NAME"))
 region_name = str(os.getenv("REGION_NAME"))
 
+print(f'asset: {asset}')
+print(f'api_secret: {api_secret}')
+print(f'api_key: {api_key}')
+print(f'passphrase: {passphrase}')
+print(f'use_sandbox: {use_sandbox}')
+print(f'bucket: {bucket}')
+print(f'model_name: {model_name}')
+print(f'region_name: {region_name}')
+
 
 def lambda_handler(event, context):
     pickle_file = "/tmp/model.pickle"
@@ -42,7 +51,12 @@ def lambda_handler(event, context):
         val_json_file.close()
 
     asset_trader = AssetTrader(
-        asset, api_secret, api_key, passphrase, pickle_file, use_sandbox
+        asset=asset,
+        api_secret=api_secret,
+        api_key=api_key,
+        passphrase=passphrase,
+        pickle_file=pickle_file,
+        use_sandbox=use_sandbox
     )
     usd_wallet = asset_trader.get_account_balance(asset_trader.usd_wallet)
     asset_wallet = asset_trader.get_account_balance(asset_trader.asset_wallet)
