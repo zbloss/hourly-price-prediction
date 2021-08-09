@@ -11,20 +11,13 @@ asset = str(os.getenv("ASSET"))
 api_secret = str(os.getenv("API_SECRET"))
 api_key = str(os.getenv("API_KEY"))
 passphrase = str(os.getenv("PASSPHRASE"))
-use_sandbox = bool(os.getenv("USE_SANDBOX"))
+use_sandbox = str(os.getenv("USE_SANDBOX"))
+use_sandbox = True if use_sandbox.lower() == 'true' else False
 
 bucket = str(os.getenv("S3_BUCKET"))
 model_name = str(os.getenv("MODEL_NAME"))
 region_name = str(os.getenv("REGION_NAME"))
-
-print(f'asset: {asset}')
-print(f'api_secret: {api_secret}')
-print(f'api_key: {api_key}')
-print(f'passphrase: {passphrase}')
 print(f'use_sandbox: {use_sandbox}')
-print(f'bucket: {bucket}')
-print(f'model_name: {model_name}')
-print(f'region_name: {region_name}')
 
 
 def lambda_handler(event, context):
