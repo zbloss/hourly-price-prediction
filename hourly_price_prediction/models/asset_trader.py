@@ -32,7 +32,6 @@ class AssetTrader(object):
             api_url=api_url,
         )
         self.accounts = self.private_client.get_accounts()
-        print(f'self.accounts: {self.accounts}')
         try:
             for account in self.accounts:
                 if account["currency"] == "USD":
