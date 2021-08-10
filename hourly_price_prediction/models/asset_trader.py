@@ -145,7 +145,7 @@ class AssetTrader(object):
             amount = asset_balance
 
         sell_order_response = self.private_client.place_market_order(
-            product_id=self.asset, side="sell", funds=str(amount)
+            product_id=self.asset, side="sell", size=str(amount)
         )
         return sell_order_response
 

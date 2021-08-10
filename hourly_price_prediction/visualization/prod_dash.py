@@ -4,13 +4,16 @@ sys.path.insert(0, "..")
 import json
 import os
 import boto3
+import pandas as pd
 from glob import glob
 from pathlib import Path
+import plotly.graph_objects as go
 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+from hourly_price_prediction.models.utils import download_from_s3
 
 external_stylesheets = [
     "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -18,8 +21,29 @@ external_stylesheets = [
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 project_dir = Path(__file__).resolve().parents[2]
+bucket = 'hourly-price-prediction'
+s3_resource = boto3.resource('s3')
+bucket = s3_resource.Bucket(bucket)
+# for obj in bucket.objects.filter(Prefix='trading_history/'):
+#     object_key = obj.key
+#     filepath, filename = os.path.split(object_key)
 
-s3_client = boto3.client('s3')
+#     if not os.path.isdir(os.path.join(project_dir, 'data', 'trading_history', filename)):
+#         bucket.download_file(
+#             object_key,
+#             os.path.join(project_dir, 'data', 'trading_history', filename)
+#         )
+
+data = []
+for json_filepath in glob(os.path.join(project_dir, 'data', 'trading_history', '*.json')):
+    with open(json_filepath, 'r') as jfile:
+        data.append(json.loads(jfile.read()))
+        jfile.close()
+
+df = pd.DataFrame(data)
+df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
+df['total_assets'] = df['close'] * df['asset_wallet'] + df['usd_wallet']
+df.sort_values(by='timestamp', ascending=True, inplace=True)
 
 app.layout = html.Div(
     [
@@ -33,8 +57,12 @@ app.layout = html.Div(
                     className="col-md-12 col-sm-12",
                 ),
                 html.Div(
-                    [dcc.Graph(id="prod-orders")], className="col-md-8 col-sm-12"
+                    [dcc.Graph(id="prod-orders")], className="col-sm-12"
                 ),
+                html.Div(
+                    [dcc.Graph(id='eth-price')], className="col-sm-12"
+                ),
+                html.Div(["Input: ", dcc.Input(id='my-input', value='initial value', type='text')]),
             ],
             className="row",
         ),
@@ -44,27 +72,65 @@ app.layout = html.Div(
 
 @app.callback(
     Output("prod-orders", "figure"),
+    Input(component_id='my-input', component_property='value')
 )
-def total_assets(model_dropdown):
-    _, model_name = os.path.split(model_dropdown)
-    base_model_path = os.path.join(
-        project_dir, "data", "model_results", model_name)
+def total_assets(value):
 
-    analyzer = PerformanceAnalyzer(
-        path_to_model_metrics=os.path.join(
-            base_model_path, "model_metrics.csv"),
-        path_to_trading_history=os.path.join(
-            base_model_path, "trading_history.csv"),
+    layout = go.Layout(
+        title=go.layout.Title(text='Ethereum Trading'),
+        xaxis=go.layout.XAxis(title='DateTime'),
+        yaxis=go.layout.YAxis(title='Asset Values [In USD]'),
     )
 
-    percentage_assets_html = analyzer.generate_line_plot(
-        y_array=analyzer.trading_history.total_assets.values
-        / analyzer.trading_history.total_assets.values[0],
-        x_axis_title="Hours",
-        y_axis_title="% Difference",
-        graph_title="% Change by Hour",
-        y_axis_unit=",.3%",
+    fig = go.Figure(layout=layout)
+    fig.add_trace(
+        go.Scatter(
+            x=df['timestamp'], 
+            y=df['total_assets'], 
+            mode="lines", 
+            name='total_assets'
+        ),
     )
 
-    return percentage_assets_html
+    fig.update_layout(yaxis_tickformat='$')
 
+    return fig
+
+@app.callback(
+    Output("eth-price", "figure"),
+    Input(component_id='my-input', component_property='value')
+)
+def total_assets(value):
+
+    layout = go.Layout(
+        title=go.layout.Title(text='Price of ETH [In USD]'),
+        xaxis=go.layout.XAxis(title='DateTime'),
+        yaxis=go.layout.YAxis(title='Price of ETH'),
+    )
+
+    fig = go.Figure(layout=layout)
+    fig.add_trace(
+        go.Scatter(
+            x=df['timestamp'], 
+            y=df['close'], 
+            mode="lines", 
+            name='eth_price'
+        ),
+    )
+
+    fig.update_layout(yaxis_tickformat='$')
+
+    return fig
+
+
+if __name__ == '__main__':
+    port = os.getenv('PORT')
+    host = os.getenv('HOST')
+
+    if port == '' or port == None:
+        port = '5000'
+    
+    if host == '' or host == None:
+        host = '0.0.0.0'
+
+    app.run_server(host=host, port=port, debug=True)
