@@ -178,7 +178,7 @@ class AssetTrader(object):
         if action == "buy":
             amount_to_exchange = amount_of_usd_to_exchange
         elif action == "sell":
-            amount_to_exchange = amount_of_asset_to_exchange
+            amount_to_exchange = round(amount_of_asset_to_exchange, 8)
         else:
             amount_to_exchange = 0.0
 
