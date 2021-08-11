@@ -162,6 +162,21 @@ class PerformanceAnalyzer(object):
 
         return fig
 
+    def _generate_kpi_plot(self, current_value: float, initial_value: float, text: str = '', subtitle: str = '', unit: str = ''):
+        """Generates a single KPI Plot"""
+        fig = go.Figure()
+        kpi_text = f"""{str(text).title()}<br><span style="font-size:0.8em;color:gray">{subtitle}</span>"""
+        indicator_params = {
+                "mode": "number+delta",
+                "value": current_value,
+                "title": {"text": kpi_text},
+                "delta": {"reference": initial_value, "relative": True},
+            }
+        if unit == "$":
+            indicator_params["number"] = {"prefix": "$"}
+        indicator = go.Indicator(**indicator_params)
+        return indicator
+
     def generate_kpi_plot(
         self,
         current_values: List[float],

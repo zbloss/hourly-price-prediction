@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+sys.path.insert(0, "..")
 from glob import glob
 from pathlib import Path
 
@@ -8,9 +9,8 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-from src.models.performance_analyzer import PerformanceAnalyzer
+from hourly_price_prediction.models.performance_analyzer import PerformanceAnalyzer
 
-sys.path.insert(0, "..")
 
 external_stylesheets = [
     "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -29,7 +29,11 @@ app.layout = html.Div(
         html.Div(
             [
                 html.Div(
-                    [html.H2("Model Name"), dcc.Graph("kpi-graphic")],
+                    [
+                        html.H2("Model Name"),
+                        html.Div(id='kpi-graphic') 
+                        #dcc.Graph("kpi-graphic")
+                    ],
                     className="col-md-12 col-sm-12",
                 ),
                 html.Div(
@@ -85,7 +89,7 @@ def total_assets(model_dropdown):
 
 
 @app.callback(
-    Output("kpi-graphic", "figure"),
+    Output("kpi-graphic", "children"),
     Input("model-dropdown", "value"),
 )
 def kpi_graph(model_dropdown):
@@ -129,14 +133,31 @@ def kpi_graph(model_dropdown):
         "Total Do Nothings",
     ]
     units = ["$", "", "$", "", "", ""]
-    kpi_chart = analyzer.generate_kpi_plot(
-        current_values=current_values,
-        initial_values=initial_values,
-        texts=texts,
-        units=units,
-    )
 
-    return kpi_chart
+    plots = []
+    for idx, _ in enumerate(current_values):
+        current_value = current_values[idx]
+        initial_value = initial_values[idx]
+        text = texts[idx]
+        unit = units[idx]
+        kpi_plot = analyzer._generate_kpi_plot(
+            current_value, 
+            initial_value, 
+            text, 
+            subtitle='', 
+            unit=unit
+        )
+        plots.append(kpi_plot)
+
+    return html.Div([html.Div(plot, className='col') for plot in plots])
+    # kpi_chart = analyzer.generate_kpi_plot(
+    #     current_values=current_values,
+    #     initial_values=initial_values,
+    #     texts=texts,
+    #     units=units,
+    # )
+
+    # return kpi_chart
 
 
 if __name__ == "__main__":
