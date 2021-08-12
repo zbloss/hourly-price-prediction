@@ -107,11 +107,13 @@ def train_test_val_split(
         test_period_in_hours < number_of_hours_in_dataset
     ), f"Final testing period exceeds dataset size (test size: {test_period_in_hours} | dataset size: {number_of_hours_in_dataset})"
 
-    test_dataset = dataset.iloc[-test_period_in_hours:]
-    test_features, test_targets = feature_target_split(
-        test_dataset, target_variable)
+    if test_period_in_hours != 0:
+        test_dataset = dataset.iloc[-test_period_in_hours:]
+        test_features, test_targets = feature_target_split(
+            test_dataset, target_variable)
 
-    dataset = dataset.iloc[:-test_period_in_hours]
+        dataset = dataset.iloc[:-test_period_in_hours]
+
     features, targets = feature_target_split(dataset, target_variable)
     (
         train_features,
@@ -121,14 +123,27 @@ def train_test_val_split(
     ) = train_test_split(
         features, targets, test_size=validation_percentage, random_state=43
     )
-    return (
-        train_features,
-        train_targets,
-        validation_features,
-        validation_targets,
-        test_features,
-        test_targets,
-    )
+
+    if test_period_in_hours == 0:
+        return_vars = (
+            train_features,
+            train_targets,
+            validation_features,
+            validation_targets,
+            validation_features,
+            validation_targets,
+        )
+    else:
+        return_vars = (
+            train_features,
+            train_targets,
+            validation_features,
+            validation_targets,
+            test_features,
+            test_targets,
+        )
+
+    return return_vars
 
 
 def training_pipeline(

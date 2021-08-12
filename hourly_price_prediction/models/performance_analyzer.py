@@ -175,7 +175,7 @@ class PerformanceAnalyzer(object):
         if unit == "$":
             indicator_params["number"] = {"prefix": "$"}
         indicator = go.Indicator(**indicator_params)
-        return indicator
+        return go.Figure(indicator)
 
     def generate_kpi_plot(
         self,
