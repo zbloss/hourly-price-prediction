@@ -200,7 +200,7 @@ def strategy_simulation(
         model_prediction = model.predict(series.values.reshape(1, -1))
 
         action = 'do_nothing'
-        if abs(model_prediction - current_close) > (validation_metrics['mae'] / 3):
+        if abs(model_prediction - current_close):
             if model_prediction - current_close > 0:
                 action = 'buy'
             else:

@@ -32,6 +32,14 @@ analyzer = PerformanceAnalyzer(
 )
 descriptive_statistics = pd.DataFrame(analyzer.trading_history_descriptive_statistics).T
 
+all_model_metrics = pd.DataFrame()
+for model_path in available_model_paths:
+    metrics = pd.read_csv(os.path.join(model_path, 'model_metrics.csv'))
+    _, model_name = os.path.split(model_path)
+    metrics['model'] = model_name
+    all_model_metrics = pd.concat((all_model_metrics, metrics), ignore_index=True)
+all_model_metrics.reset_index(inplace=True, drop=True)
+
 app.layout = html.Div(
     [
         html.Div([
@@ -67,7 +75,12 @@ app.layout = html.Div(
             className="row",
         ),
         html.Div([
-            dcc.Graph(id='asset-graphic')
+            html.Div([
+                dcc.Graph(id='total-assets-graphic')
+            ], className="col-sm-6"),
+            html.Div([
+                dcc.Graph(id='total-eth-graphic')
+            ], className="col-sm-6"),
         ], className="row"),
         html.Div([
             dash_table.DataTable(
@@ -156,6 +169,27 @@ app.layout = html.Div(
                 html.Div([dcc.Graph(id='kpi-total-do-nothings')], className='col'),
             ], className="row"),
         ]),
+
+        html.Div([
+            dash_table.DataTable(
+                id='all-model-metrics-table',
+                columns=[{'name': i, 'id': i} for i in all_model_metrics.columns],
+                page_current=0,
+                page_size=20, 
+                filter_action='native',
+                data=all_model_metrics.to_dict(orient='records'),
+                page_action='native',
+                sort_action='native',
+                column_selectable="single",
+                row_selectable="single",
+                sort_mode='multi',
+                style_table={
+                    'overflowX': 'scroll',
+                    'maxHeight':'300px',
+                    'height': 'auto'
+                    },
+                ),
+        ], className="row"),
     ],
     className="container",
 )
@@ -170,7 +204,7 @@ def total_assets(model_dropdown):
     return model_name
 
 @app.callback(
-    Output("asset-graphic", "figure"),
+    Output("total-assets-graphic", "figure"),
     Input("model-dropdown", "value"),
 )
 def total_assets(model_dropdown):
@@ -185,7 +219,7 @@ def total_assets(model_dropdown):
             base_model_path, "trading_history.csv"),
     )
 
-    percentage_assets_html = analyzer.generate_line_plot(
+    percentage_assets_fig = analyzer.generate_line_plot(
         y_array=analyzer.trading_history.total_assets.values
         / analyzer.trading_history.total_assets.values[0],
         x_axis_title="Hours",
@@ -194,7 +228,33 @@ def total_assets(model_dropdown):
         y_axis_unit=",.3%",
     )
 
-    return percentage_assets_html
+    return percentage_assets_fig
+
+@app.callback(
+    Output("total-eth-graphic", "figure"),
+    Input("model-dropdown", "value"),
+)
+def total_assets(model_dropdown):
+    _, model_name = os.path.split(model_dropdown)
+    base_model_path = os.path.join(
+        project_dir, "data", "model_results", model_name)
+
+    analyzer = PerformanceAnalyzer(
+        path_to_model_metrics=os.path.join(
+            base_model_path, "model_metrics.csv"),
+        path_to_trading_history=os.path.join(
+            base_model_path, "trading_history.csv"),
+    )
+
+    percentage_assets_fig = analyzer.generate_line_plot(
+        y_array=analyzer.trading_history.asset_wallet_balance.values
+        / analyzer.trading_history.asset_wallet_balance.values[0],
+        x_axis_title="Hours",
+        y_axis_title="ETH Wallet",
+        graph_title="Change by Hour",
+    )
+
+    return percentage_assets_fig
 
 
 @app.callback(

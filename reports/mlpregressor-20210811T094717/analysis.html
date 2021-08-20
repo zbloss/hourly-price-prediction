@@ -1,0 +1,88 @@
+<html>
+        <head>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+            <style>bodymargin:0 100; background:whitesmoke;</style>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        </head>
+        <body>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1>mlpregressor-20210811T094717</h1>
+                    </div>
+                </div>
+
+                <div class="row"><div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">KPIs</h5>
+                <p class="card-text"></p>
+            </div>
+            Figure({
+    'data': [{'delta': {'reference': 100.0, 'relative': True},
+              'domain': {'column': 1, 'row': 1},
+              'mode': 'number+delta',
+              'number': {'prefix': '$'},
+              'title': {'text': 'Total Assets<br><span style="font-size:0.8em;color:gray"></span>'},
+              'type': 'indicator',
+              'value': 136.85495701501966},
+             {'delta': {'reference': 0.1834017532858754, 'relative': True},
+              'domain': {'column': 2, 'row': 1},
+              'mode': 'number+delta',
+              'title': {'text': 'Annualized Std<br><span style="font-size:0.8em;color:gray"></span>'},
+              'type': 'indicator',
+              'value': 0.1834017532858754},
+             {'delta': {'reference': 98.33729846895, 'relative': True},
+              'domain': {'column': 3, 'row': 1},
+              'mode': 'number+delta',
+              'number': {'prefix': '$'},
+              'title': {'text': 'Total Asset Max Vs Min<br><span style="font-size:0.8em;color:gray"></span>'},
+              'type': 'indicator',
+              'value': 136.96114143629836},
+             {'delta': {'reference': 220, 'relative': True},
+              'domain': {'column': 4, 'row': 1},
+              'mode': 'number+delta',
+              'title': {'text': 'Total Buys<br><span style="font-size:0.8em;color:gray"></span>'},
+              'type': 'indicator',
+              'value': 220},
+             {'delta': {'reference': 52, 'relative': True},
+              'domain': {'column': 5, 'row': 1},
+              'mode': 'number+delta',
+              'title': {'text': 'Total Sells<br><span style="font-size:0.8em;color:gray"></span>'},
+              'type': 'indicator',
+              'value': 52},
+             {'delta': {'reference': 64, 'relative': True},
+              'domain': {'column': 6, 'row': 1},
+              'mode': 'number+delta',
+              'title': {'text': 'Total Do Nothings<br><span style="font-size:0.8em;color:gray"></span>'},
+              'type': 'indicator',
+              'value': 64}],
+    'layout': {'grid': {'columns': 7, 'rows': 1}, 'template': '...'}
+})
+        </div>
+        </div></div>
+                <div class="row"><div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Assets [% Change]</h5>
+                <p class="card-text"></p>
+            </div>
+            Figure({
+    'data': [{'mode': 'lines',
+              'name': '% Change By Hour',
+              'type': 'scatter',
+              'x': array([  0,   1,   2, ..., 333, 334, 335]),
+              'y': array([1.        , 1.00051298, 1.00255262, ..., 1.35699969, 1.36236479,
+                          1.36854957])}],
+    'layout': {'template': '...',
+               'title': {'text': '% Change By Hour'},
+               'xaxis': {'title': {'text': 'Hours'}},
+               'yaxis': {'tickformat': ',.3%', 'title': {'text': '% Difference'}}}
+})
+        </div>
+        </div></div>
+
+
+            </div>
+        </body>
+    </html>

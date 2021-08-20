@@ -40,7 +40,7 @@ jobs:
             --function-name asset-trader \
             --timeout 120 \
             --role ${{ secrets.AWS_ROLE_TO_ASSUME }} \
-            --environment "Variables={ASSET=ETH-USD,API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=${{ secrets.USE_SANDBOX }},S3_BUCKET=hourly-price-prediction,MODEL_NAME=linearregressor-20210811T204723,REGION_NAME=us-east-2}"
+            --environment "Variables={ASSET=ETH-USD,API_SECRET=${{ secrets.COINBASE_API_SECRET }},API_KEY=${{ secrets.COINBASE_API_KEY }},PASSPHRASE=${{ secrets.PASSPHRASE }},USE_SANDBOX=${{ secrets.USE_SANDBOX }},S3_BUCKET=hourly-price-prediction,MODEL_NAME=elasticnet-20210819T200545,REGION_NAME=us-east-2}"
    
       - name: Update Lambda Function Code
         run: |
